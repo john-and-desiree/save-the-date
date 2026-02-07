@@ -109,11 +109,14 @@ body {
 
 /* CLIC SOLO SULLA PARTE DESTRA DELL’AEREO */
 .plane {
-  margin-top: 10px;
-  width: min(260px, 80vw);
+  margin-top: 14px;
+
+  width: min(360px, 90vw); /* ⬅️ più grandi */
+  max-width: 420px;        /* limite elegante */
+
   cursor: pointer;
 
-  clip-path: inset(0 0 0 50%);
+  /*clip-path: inset(0 0 0 50%);*/
 
   opacity: 0;
   
@@ -134,7 +137,7 @@ body {
 
 /* PNG SAVE THE DATE */
 .save-date {
-  margin-top: 6vh; /* regola questo valore per alzare/abbassare */
+  margin-top: -2vh; /* regola questo valore per alzare/abbassare */
   width: min(320px, 85vw);
 
   opacity: 0;
@@ -179,4 +182,9 @@ body {
   .overlay h1 {
     font-size: 2rem;
   }
+
+  .plane {
+    width: 90vw;
+  }
+  
 }
