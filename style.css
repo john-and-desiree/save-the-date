@@ -96,7 +96,6 @@ body {
 .slide:nth-of-type(3) .overlay h1 {
   margin-top: 15vh;          /* regola questo valore per alzare/abbassare */
   text-shadow: none;        /* rimuove l'ombra solo per questa h1 */
-  animation: fadeInText 2s ease forwards;
 }
 
 /* Mobile: riduci lo spostamento */
@@ -106,27 +105,44 @@ body {
   }
 }
 
-
-/* BOTTONE AEREO */
-.next-btn {
-  margin-top: 12px; /* ⬅️ molto più vicino al testo */
-  font-size: 1.6rem;
-
-  background: none;
-  border: none;
-  color: white;
+/* CLIC SOLO SULLA PARTE DESTRA DELL’AEREO */
+.plane {
+  margin-top: 10px;
+  width: min(260px, 80vw);
   cursor: pointer;
 
+  clip-path: inset(0 0 0 50%);
+
   opacity: 0;
-  animation: fadeInPlane 2s ease forwards;
-  animation-delay: 1.2s;
 
   transition: transform 0.3s ease;
 }
 
-.next-btn:hover {
+.plane:hover {
   transform: translateX(6px);
 }
+
+/* Fade-in AEREO quando slide diventa attiva */
+.slide.active .plane {
+  animation: fadeInSoft 1.8s ease forwards;
+  animation-delay: 1.4s;
+}
+
+/* PNG SAVE THE DATE */
+.save-date {
+  margin-top: 12vh;
+  width: min(320px, 85vw);
+
+  opacity: 0;
+  animation: fadeInSoft 2.2s ease forwards;
+  animation-delay: 1s;
+}
+
+/* TERZA SLIDE CLICCABILE */
+.last-slide {
+  cursor: pointer;
+}
+
 
 /* ANIMAZIONI */
 @keyframes fadeInText {
@@ -140,7 +156,8 @@ body {
   }
 }
 
-@keyframes fadeInPlane {
+/* FADE-IN MORBIDO PNG */
+@keyframes fadeInSoft {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -151,36 +168,10 @@ body {
   }
 }
 
+
 /* MOBILE FRIENDLY */
 @media (max-width: 600px) {
   .overlay h1 {
     font-size: 2rem;
-  }
-}
-
-/* CUORE CON SCIA LUNGA */
-.heart-plane {
-  background: none;
-  border: none;
-  padding: 0;
-  margin-top: 8px;
-  cursor: pointer;
-}
-
-.heart-plane svg {
-  overflow: visible;
-}
-
-/* LINEA CHE SI DISEGNA */
-.heart-path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: drawHeart 2.5s ease forwards;
-}
-
-/* ANIMAZIONE SCIA */
-@keyframes drawHeart {
-  to {
-    stroke-dashoffset: 0;
   }
 }

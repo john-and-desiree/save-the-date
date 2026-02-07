@@ -1,29 +1,27 @@
 const slides = document.querySelectorAll('.slide');
 const nextButtons = document.querySelectorAll('.next-btn');
+const lastSlide = document.querySelector('.last-slide');
 
 let currentSlide = 0;
 
 function showSlide(index) {
-  slides.forEach((slide, i) => {
-    slide.classList.remove('active');
-
-    // reset animazioni testo
-    const text = slide.querySelector('h1');
-    if (text) {
-      text.style.animation = 'none';
-      text.offsetHeight; // trigger reflow
-      text.style.animation = '';
-    }
-  });
-
+  slides.forEach(slide => slide.classList.remove('active'));
   slides[index].classList.add('active');
 }
 
-nextButtons.forEach(button => {
-  button.addEventListener('click', () => {
+/* AVANTI — click sull’aereo */
+nextButtons.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation(); // evita click multipli
     if (currentSlide < slides.length - 1) {
       currentSlide++;
       showSlide(currentSlide);
     }
   });
+});
+
+/* RICOMINCIA — click su tutta la terza slide */
+lastSlide.addEventListener('click', () => {
+  currentSlide = 0;
+  showSlide(currentSlide);
 });
