@@ -1,5 +1,4 @@
 const slides = document.querySelectorAll('.slide');
-const nextButtons = document.querySelectorAll('.next-btn');
 const lastSlide = document.querySelector('.last-slide');
 
 let currentSlide = 0;
@@ -9,18 +8,17 @@ function showSlide(index) {
   slides[index].classList.add('active');
 }
 
-/* AVANTI — click sull’aereo */
-nextButtons.forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation(); // evita click multipli
-    if (currentSlide < slides.length - 1) {
-      currentSlide++;
+/* CLICK OVUNQUE → AVANTI */
+slides.forEach((slide, index) => {
+  slide.addEventListener('click', () => {
+    if (index < slides.length - 1) {
+      currentSlide = index + 1;
       showSlide(currentSlide);
     }
   });
 });
 
-/* RICOMINCIA — click su tutta la terza slide */
+/* TERZA SLIDE → RICOMINCIA */
 lastSlide.addEventListener('click', () => {
   currentSlide = 0;
   showSlide(currentSlide);
