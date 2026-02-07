@@ -115,9 +115,10 @@ body {
 
   clip-path: inset(0 0 0 50%);
 
-  opacity: 1 !important;
-  background: red;
-  /*opacity: 0;*/
+  /*DEBUG*/
+  /*opacity: 1 !important;
+  background: red;*/
+  opacity: 0;
   
   z-index: 3; /* ⬅️ sopra overlay e immagine */
 
@@ -136,7 +137,7 @@ body {
 
 /* PNG SAVE THE DATE */
 .save-date {
-  margin-top: 12vh;
+  margin-top: 6vh; /* regola questo valore per alzare/abbassare */
   width: min(320px, 85vw);
 
   opacity: 0;
