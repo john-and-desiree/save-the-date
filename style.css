@@ -226,7 +226,7 @@ body {
 @media (min-width: 900px) {
 
   .slide {
-    background: black;
+    background: radial-gradient(circle, #111 0%, #000 100%);
   }
 
   .slide .bg {
@@ -257,14 +257,4 @@ body {
     width: 420px;
   }
 
-}
-
-
-/* Spotify Player */
-.spotify-player {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 9999;
 }
