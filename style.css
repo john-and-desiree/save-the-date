@@ -234,32 +234,41 @@ body {
 
 
 /* DESKTOP LAYOUT */
-/*
 @media (min-width: 900px) {
 
   .slide {
     background: radial-gradient(circle, #111 0%, #000 100%);
   }
 
-  .slide .bg {
+  /* SLIDE 1 e 2 → foto verticali con bande nere */
+  .slide:nth-of-type(1) .bg,
+  .slide:nth-of-type(2) .bg {
     position: absolute;
-
     top: 50%;
     left: 50%;
-
     height: 100vh;
     width: auto;
-
+    object-fit: contain;   /* mostra tutta la foto */
     transform: translate(-50%, -50%);
-
-    object-fit: contain;
   }
 
+  /* SLIDE 3 → foto a tutto schermo (come ora) */
+  .slide:nth-of-type(3) .bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;     /* riempie tutto lo schermo */
+    transform: translate(-50%, -50%);
+  }
 
+  /* Testi desktop */
   .overlay h1 {
     font-size: clamp(3rem, 3vw, 4.5rem);
   }
 
+  /* PNG desktop (come ora) */
   .save-date {
     width: 420px;
   }
@@ -268,9 +277,8 @@ body {
     width: 420px;
   }
 
+  /* luxury fade */
   .slider {
     animation: luxuryFade 1.2s ease;
   }
-
 }
-*/
