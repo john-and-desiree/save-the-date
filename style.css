@@ -299,3 +299,31 @@ body {
     margin-top: 1vh;
   }
 }
+
+/* SFONDO SFUOCATO SOLO PER SLIDE 1 E 2 */
+.slide:nth-of-type(1)::before,
+.slide:nth-of-type(2)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) brightness(0.7);
+  transform: scale(1.15);
+  z-index: 0;
+}
+
+/* Immagini specifiche per ogni slide */
+.slide:nth-of-type(1)::before {
+  background-image: url("images/foto1.jpg");
+}
+
+.slide:nth-of-type(2)::before {
+  background-image: url("images/foto2.jpg");
+}
+
+/* La foto originale deve stare sopra lo sfondo sfocato */
+.slide .bg {
+  position: relative;
+  z-index: 1;
+}
