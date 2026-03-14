@@ -225,18 +225,25 @@ body {
 /* DESKTOP LAYOUT */
 @media (min-width: 900px) {
 
-  .slide .bg {
-    width: auto;
-    height: 100vh;
-
-    object-fit: contain;   /* mostra tutta la foto */
-  }
-
   .slide {
-    background: black;     /* bande laterali eleganti */
+    background: black;
   }
 
-  /* scritte su desktop */
+  .slide .bg {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    height: 100vh;
+    width: auto;
+
+    transform: translate(-50%, -50%);
+
+    object-fit: contain;
+  }
+
+  /* scritte desktop */
 
   .overlay h1 {
     font-size: clamp(3rem, 3vw, 4.5rem);
@@ -249,19 +256,6 @@ body {
   .plane {
     width: 420px;
   }
-
-  /* tipico sito matrimonio */
-  /*body {
-    background: #111;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .slider {
-    width: 420px;
-    height: 800px;
-  }*/
 
 }
 
