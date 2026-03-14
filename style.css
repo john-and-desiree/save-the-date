@@ -1,3 +1,5 @@
+/* FORCE REDEPLOY */
+
 /* RESET BASE */
 * {
   margin: 0;
@@ -8,6 +10,7 @@
 /* BODY */
 body {
   font-family: 'Georgia', serif;
+  /*overflow: hidden;*/
 }
 
 /* SLIDER CONTAINER */
@@ -33,12 +36,12 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: auto;
+  width: 100%;
   height: 100vh;
-  object-fit: contain;   /* FOTO VERTICALI CON BANDE NERE */
-  object-position: center;
+  object-fit: cover;       /* riempie l'altezza senza bande bianche */
+  object-position: center; /* centra il ritaglio */
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  pointer-events: none;    /* lascia cliccabili i controlli sovrapposti */
 }
 
 /* SLIDE ATTIVA */
@@ -62,7 +65,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
 
-  z-index: 2;
+  z-index: 2; /* ⬅️ QUESTA È LA CHIAVE */
 
   background: linear-gradient(
     to bottom,
@@ -82,37 +85,51 @@ body {
 
 /* TESTO */
 .overlay h1 {
+  /*font-family: 'Playfair Display', serif;
+  font-style: italic;*/
+
   font-size: clamp(2.2rem, 5vw, 3.8rem);
   line-height: 1.25;
+
   color: white;
+
   opacity: 0;
   animation: fadeInText 2.4s ease forwards;
 
+  /* MAGIA PER SFONDI CHIARI */
   text-shadow:
     0 2px 6px rgba(0, 0, 0, 0.55),
     0 0 12px rgba(0, 0, 0, 0.35);
 }
 
-/* TERZA SLIDE: TITOLO */
+/* Sposta leggermente verso il basso solo il titolo della terza slide e rimuove lo shadow */
 .slide:nth-of-type(3) .overlay h1 {
-  margin-top: 15vh;
-  text-shadow: none;
+  margin-top: 15vh;          /* regola questo valore per alzare/abbassare */
+  text-shadow: none;        /* rimuove l'ombra solo per questa h1 */
 }
 
+/* Mobile: riduci lo spostamento */
 @media (max-width: 600px) {
   .slide:nth-of-type(3) .overlay h1 {
     margin-top: 4vh;
   }
 }
 
-/* PNG AEREO */
+/* CLIC SOLO SULLA PARTE DESTRA DELL’AEREO */
 .plane {
   margin-top: 14px;
-  width: min(360px, 90vw);
-  max-width: 420px;
+
+  width: min(360px, 90vw); /* ⬅️ più grandi */
+  max-width: 420px;        /* limite elegante */
+
   cursor: pointer;
+
+  /*clip-path: inset(0 0 0 50%);*/
+
   opacity: 0;
-  z-index: 3;
+  
+  z-index: 3; /* ⬅️ sopra overlay e immagine */
+
   transition: transform 0.3s ease;
 }
 
@@ -124,17 +141,22 @@ body {
   transform: translateX(12px) scale(1.03);
 }
 
+/* Fade-in AEREO quando slide diventa attiva */
 .slide.active .plane {
+  /*animation: fadeInSoft 1.8s ease forwards;
+  animation-delay: 1.4s;*/
+
   animation: romanticFadeUp 2s ease forwards;
   animation-delay: 1.6s;
 }
 
 /* PNG SAVE THE DATE */
 .save-date {
-  margin-top: 2vh;
+  margin-top: -2vh; /* regola questo valore per alzare/abbassare */
   width: min(320px, 85vw);
+
   opacity: 0;
-  z-index: 3;
+  z-index: 3; /* ⬅️ */
   animation: fadeInSoft 2.2s ease forwards;
   animation-delay: 1s;
 }
@@ -149,73 +171,106 @@ body {
   cursor: pointer;
 }
 
+
 /* ANIMAZIONI */
 @keyframes fadeInText {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+/* FADE-IN MORBIDO PNG */
 @keyframes fadeInSoft {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 
 @keyframes romanticFadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes luxuryFade {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-/* MOBILE */
+
+/* MOBILE FRIENDLY */
 @media (max-width: 600px) {
   .overlay h1 {
     font-size: 2rem;
   }
+
   .plane {
     width: 90vw;
   }
+  
 }
 
-/* DESKTOP */
+
+/* DESKTOP LAYOUT */
 @media (min-width: 900px) {
 
   .slide {
     background: radial-gradient(circle, #111 0%, #000 100%);
   }
 
-  /* FOTO VERTICALI CON BANDE NERE (NON TOCCARE) */
   .slide .bg {
-    width: auto;
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
     height: 100vh;
+    width: auto;
+
+    transform: translate(-50%, -50%);
+
     object-fit: contain;
   }
 
-  /* CONTENITORE CHE SEGUE LA LARGHEZZA DELLA FOTO */
-  .content-box {
-    width: fit-content;   /* SI RESTRINGE ESATTAMENTE QUANTO LA FOTO */
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* PNG CHE NON SUPERANO MAI LA FOTO */
-  .plane,
-  .save-date {
-    width: 100%;          /* SI ADATTANO ALLA FOTO */
-    max-width: 420px;     /* LIMITE ELEGANTE */
-    height: auto;
-  }
+  /* scritte desktop */
 
   .overlay h1 {
     font-size: clamp(3rem, 3vw, 4.5rem);
   }
 
+  .save-date {
+    width: 420px;
+  }
+
+  .plane {
+    width: 420px;
+  }
+
+  /* luxury fade */
   .slider {
     animation: luxuryFade 1.2s ease;
   }
+
 }
