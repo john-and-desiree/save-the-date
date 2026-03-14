@@ -268,6 +268,20 @@ body {
     width: 420px;
   }
 
+  .plane,
+  .save-date {
+    max-width: 80vw;   /* non superano mai la larghezza visibile */
+    height: auto;
+  }
+
+  .slide.last-slide {
+    overflow-y: auto;   /* permette di vedere tutto il PNG */
+    scrollbar-width: none; /* Firefox */
+  }
+  .slide.last-slide::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
   /* luxury fade */
   .slider {
     animation: luxuryFade 1.2s ease;
