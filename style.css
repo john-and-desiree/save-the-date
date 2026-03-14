@@ -282,3 +282,20 @@ body {
     animation: luxuryFade 1.2s ease;
   }
 }
+
+/* DESKTOP PICCOLI (es. laptop 13–14 pollici) */
+@media (min-width: 900px) and (max-width: 1300px) {
+
+  /* Riduci PNG per evitare che escano dalla foto */
+  .plane,
+  .save-date {
+    width: min(300px, 70vw);
+    max-width: 300px;
+    height: auto;
+  }
+
+  /* Aggiusta anche il margine del save-the-date se serve */
+  .save-date {
+    margin-top: 1vh;
+  }
+}
