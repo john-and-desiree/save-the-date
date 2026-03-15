@@ -333,19 +333,19 @@ body {
 /* Progress bar stile Instagram Stories */
 .progress-bar {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 10px;
+  left: 10px;
+  right: 10px;
   height: 4px;
   display: flex;
   gap: 4px;
-  padding: 6px;
   z-index: 999999;
   pointer-events: none;
 }
 
 .progress-bar .segment {
   flex: 1;
+  height: 100%;
   background: rgba(255,255,255,0.3);
   border-radius: 2px;
   overflow: hidden;
