@@ -332,8 +332,7 @@ body {
 
 /* Progress bar stile Instagram Stories */
 .progress-bar {
-  z-index: 999999; /* ancora più alto */
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -341,12 +340,13 @@ body {
   display: flex;
   gap: 4px;
   padding: 6px;
-  z-index: 9999;
+  z-index: 999999;
+  pointer-events: none;
 }
 
 .progress-bar .segment {
   flex: 1;
-  background: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.3);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
@@ -356,5 +356,6 @@ body {
   height: 100%;
   width: 0%;
   background: white;
+  box-shadow: 0 0 6px rgba(255,255,255,0.8);
   transition: width linear;
 }
