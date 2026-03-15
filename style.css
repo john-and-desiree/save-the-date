@@ -10,6 +10,7 @@
 /* BODY */
 body {
   font-family: 'Georgia', serif;
+  position: relative;
   /*overflow: hidden;*/
 }
 
@@ -331,6 +332,7 @@ body {
 
 /* Progress bar stile Instagram Stories */
 .progress-bar {
+  z-index: 999999; /* ancora più alto */
   position: absolute;
   top: 0;
   left: 0;

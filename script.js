@@ -6,7 +6,7 @@ const seg2 = document.getElementById('seg2');
 const seg3 = document.getElementById('seg3');
 
 let currentSlide = 0;
-let autoPlayInterval = 10000; // 10 secondi
+let autoPlayInterval = 8000; // 8 secondi
 let timer;
 
 /* -------------------------
