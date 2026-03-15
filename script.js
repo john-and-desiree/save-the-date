@@ -11,14 +11,12 @@ let currentSlide = 0;
 let autoPlayInterval = 8000; // 8 secondi
 let timer;
 
-let isHolding = false;      // true mentre tieni premuto
-let holdJustEnded = false;  // per ignorare il click subito dopo il long press
-
 /* -------------------------
    SLIDES
 -------------------------- */
 
 function showSlide(index) {
+
   currentSlide = index;
 
   slides.forEach(slide => slide.classList.remove('active'));
@@ -28,6 +26,7 @@ function showSlide(index) {
 }
 
 function nextSlide() {
+
   if (currentSlide < slides.length - 1) {
     showSlide(currentSlide + 1);
   }
@@ -38,6 +37,7 @@ function nextSlide() {
 }
 
 function startAutoPlay() {
+
   clearInterval(timer);
 
   if (currentSlide < slides.length - 1) {
@@ -54,6 +54,7 @@ function resetAutoPlay() {
 -------------------------- */
 
 function updateProgressBar(index) {
+
   // reset totale
   segments.forEach(seg => {
     seg.style.transition = "none";
@@ -76,72 +77,27 @@ function updateProgressBar(index) {
 }
 
 /* -------------------------
-   PAUSA / RIPRESA (pressione lunga)
--------------------------- */
-
-function pauseAutoPlay() {
-  isHolding = true;
-  holdJustEnded = false;
-
-  clearInterval(timer);
-
-  // Pausa animazione progress bar
-  segments.forEach(seg => {
-    const computed = window.getComputedStyle(seg);
-    const width = computed.width;
-    seg.style.transition = "none";
-    seg.style.width = width; // blocca la larghezza attuale
-  });
-}
-
-function resumeAutoPlay() {
-  // segna che abbiamo appena finito un hold
-  if (isHolding) {
-    holdJustEnded = true;
-  }
-  isHolding = false;
-
-  updateProgressBar(currentSlide);
-  startAutoPlay();
-}
-
-// Eventi per pressione lunga (mouse + touch)
-slides.forEach(slide => {
-  slide.addEventListener('mousedown', pauseAutoPlay);
-  slide.addEventListener('touchstart', pauseAutoPlay, { passive: true });
-
-  slide.addEventListener('mouseup', resumeAutoPlay);
-  slide.addEventListener('mouseleave', resumeAutoPlay);
-  slide.addEventListener('touchend', resumeAutoPlay);
-});
-
-/* -------------------------
    CLICK
 -------------------------- */
 
 slides.forEach((slide, index) => {
-  slide.addEventListener('click', (e) => {
-    // se il click arriva subito dopo un long press → ignoralo
-    if (holdJustEnded) {
-      holdJustEnded = false;
-      return;
-    }
+
+  slide.addEventListener('click', () => {
 
     if (index < slides.length - 1) {
       showSlide(index + 1);
       resetAutoPlay();
     }
+
   });
+
 });
 
-lastSlide.addEventListener('click', (e) => {
-  if (holdJustEnded) {
-    holdJustEnded = false;
-    return;
-  }
+lastSlide.addEventListener('click', () => {
 
   showSlide(0);
   resetAutoPlay();
+
 });
 
 /* -------------------------
