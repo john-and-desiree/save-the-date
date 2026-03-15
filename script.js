@@ -2,7 +2,7 @@ const slides = document.querySelectorAll('.slide');
 const lastSlide = document.querySelector('.last-slide');
 
 let currentSlide = 0;
-let autoPlayInterval = 6000; // ⬅️ cambia qui i secondi (6000 = 6s)
+let autoPlayInterval = 10000; // 10 secondi
 let timer;
 
 // Mostra slide
@@ -11,22 +11,27 @@ function showSlide(index) {
   slides[index].classList.add('active');
 }
 
-// Avanza di 1 slide
+// Avanza di 1 slide (ma NON dalla 3 alla 1)
 function nextSlide() {
   if (currentSlide < slides.length - 1) {
     currentSlide++;
-  } else {
-    currentSlide = 0; // ricomincia dopo la terza
+    showSlide(currentSlide);
   }
-  showSlide(currentSlide);
+
+  // Se siamo arrivati alla terza slide → stop autoplay
+  if (currentSlide === slides.length - 1) {
+    clearInterval(timer);
+  }
 }
 
-// Avvia autoplay
+// Avvia autoplay SOLO se non siamo sull’ultima slide
 function startAutoPlay() {
-  timer = setInterval(nextSlide, autoPlayInterval);
+  if (currentSlide < slides.length - 1) {
+    timer = setInterval(nextSlide, autoPlayInterval);
+  }
 }
 
-// Reset autoplay quando l’utente clicca
+// Reset autoplay quando l’utente clicca (ma non sulla terza slide)
 function resetAutoPlay() {
   clearInterval(timer);
   startAutoPlay();
@@ -43,10 +48,12 @@ slides.forEach((slide, index) => {
   });
 });
 
-/* TERZA SLIDE → RICOMINCIA */
+/* TERZA SLIDE → RICOMINCIA SOLO AL CLICK */
 lastSlide.addEventListener('click', () => {
   currentSlide = 0;
   showSlide(currentSlide);
+
+  // Riparte autoplay perché siamo tornati alla slide 1
   resetAutoPlay();
 });
 
