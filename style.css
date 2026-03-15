@@ -384,3 +384,32 @@ body {
     background: rgba(255,255,255,0.75);
   }
 }
+
+
+/* Rimuove TUTTI gli highlight blu su Android e iOS */
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* Rimuove il bordo blu di focus */
+*:focus,
+*:focus-visible {
+  outline: none !important;
+}
+
+/* Immagini cliccabili: rimuove overlay blu e selezione */
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* Elementi cliccabili (plane, slide, last-slide) */
+.plane,
+.last-slide,
+.slide {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-focus-ring-color: transparent;
+  outline: none !important;
+}
