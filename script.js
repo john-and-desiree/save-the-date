@@ -1,43 +1,90 @@
 const slides = document.querySelectorAll('.slide');
 const lastSlide = document.querySelector('.last-slide');
 
+const seg1 = document.getElementById('seg1');
+const seg2 = document.getElementById('seg2');
+const seg3 = document.getElementById('seg3');
+
 let currentSlide = 0;
 let autoPlayInterval = 10000; // 10 secondi
 let timer;
 
-// Mostra slide
+/* -------------------------
+   FUNZIONI SLIDES
+-------------------------- */
+
 function showSlide(index) {
   slides.forEach(slide => slide.classList.remove('active'));
   slides[index].classList.add('active');
+  updateProgressBar(index);
 }
 
-// Avanza di 1 slide (ma NON dalla 3 alla 1)
 function nextSlide() {
   if (currentSlide < slides.length - 1) {
     currentSlide++;
     showSlide(currentSlide);
   }
 
-  // Se siamo arrivati alla terza slide → stop autoplay
+  // Se siamo sulla terza slide → stop autoplay
   if (currentSlide === slides.length - 1) {
     clearInterval(timer);
   }
 }
 
-// Avvia autoplay SOLO se non siamo sull’ultima slide
 function startAutoPlay() {
   if (currentSlide < slides.length - 1) {
     timer = setInterval(nextSlide, autoPlayInterval);
   }
 }
 
-// Reset autoplay quando l’utente clicca (ma non sulla terza slide)
 function resetAutoPlay() {
   clearInterval(timer);
   startAutoPlay();
 }
 
-/* CLICK OVUNQUE → AVANTI */
+/* -------------------------
+   PROGRESS BAR
+-------------------------- */
+
+function updateProgressBar(index) {
+  // Reset animazioni
+  [seg1, seg2, seg3].forEach(seg => {
+    seg.classList.remove('active');
+    seg.style.transitionDuration = "0ms";
+  });
+
+  // Slide 1 → anima solo il primo segmento
+  if (index === 0) {
+    seg1.style.transitionDuration = autoPlayInterval + "ms";
+    seg1.classList.add('active');
+  }
+
+  // Slide 2 → primo pieno, secondo in animazione
+  if (index === 1) {
+    seg1.classList.add('active');
+    seg1.style.transitionDuration = "0ms";
+
+    seg2.style.transitionDuration = autoPlayInterval + "ms";
+    seg2.classList.add('active');
+  }
+
+  // Slide 3 → primi due pieni, terzo ANIMATO (10s)
+  if (index === 2) {
+    seg1.classList.add('active');
+    seg1.style.transitionDuration = "0ms";
+
+    seg2.classList.add('active');
+    seg2.style.transitionDuration = "0ms";
+
+    seg3.style.transitionDuration = autoPlayInterval + "ms";
+    seg3.classList.add('active');
+  }
+}
+
+/* -------------------------
+   CLICK HANDLERS
+-------------------------- */
+
 slides.forEach((slide, index) => {
   slide.addEventListener('click', () => {
     if (index < slides.length - 1) {
@@ -48,14 +95,15 @@ slides.forEach((slide, index) => {
   });
 });
 
-/* TERZA SLIDE → RICOMINCIA SOLO AL CLICK */
 lastSlide.addEventListener('click', () => {
   currentSlide = 0;
   showSlide(currentSlide);
-
-  // Riparte autoplay perché siamo tornati alla slide 1
   resetAutoPlay();
 });
 
-// Avvia autoplay all'apertura
+/* -------------------------
+   START
+-------------------------- */
+
+showSlide(0);
 startAutoPlay();

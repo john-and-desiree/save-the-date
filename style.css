@@ -327,3 +327,41 @@ body {
   position: relative;
   z-index: 1;
 }
+
+
+/* Progress bar stile Instagram Stories */
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px; /* sottilissima */
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  z-index: 9999;
+}
+
+.progress-bar .segment {
+  flex: 1;
+  background: rgba(255,255,255,0.35);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar .segment::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: white;
+  transition: width linear;
+}
+
+/* Segmento attivo → animazione */
+.progress-bar .segment.active::after {
+  width: 100%;
+}
