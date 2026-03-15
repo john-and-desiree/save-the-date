@@ -361,7 +361,7 @@ body {
 
 @media (max-width: 600px) {
   .progress-bar {
-    height: 0.8px;   /* più sottile su mobile */
+    height: 1px;   /* più sottile su mobile */
     top: 6px;      /* opzionale: avvicina al bordo */
     gap: 2px;      /* segmenti più vicini */
   }
