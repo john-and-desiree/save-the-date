@@ -359,6 +359,17 @@ body {
   box-shadow: 0 0 6px rgba(255,255,255,0.6); /* attivare se barra è troppo chiara e non è visibile */
 }
 
+/* Rimuove il flash blu su mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plane,
+.last-slide,
+.slide {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @media (max-width: 600px) {
   .progress-bar {
     height: 1.5px;   /* più sottile su mobile */
