@@ -10,7 +10,7 @@ let autoPlayInterval = 10000; // 10 secondi
 let timer;
 
 /* -------------------------
-   FUNZIONI SLIDES
+   SLIDES
 -------------------------- */
 
 function showSlide(index) {
@@ -25,7 +25,6 @@ function nextSlide() {
     showSlide(currentSlide);
   }
 
-  // Se siamo sulla terza slide → stop autoplay
   if (currentSlide === slides.length - 1) {
     clearInterval(timer);
   }
@@ -46,43 +45,49 @@ function resetAutoPlay() {
    PROGRESS BAR
 -------------------------- */
 
-function updateProgressBar(index) {
-  // Reset animazioni
+function resetSegments() {
   [seg1, seg2, seg3].forEach(seg => {
-    seg.classList.remove('active');
     seg.style.transitionDuration = "0ms";
+    seg.style.width = "0%";
   });
+}
 
-  // Slide 1 → anima solo il primo segmento
+function updateProgressBar(index) {
+  // Reset
+  seg1.style.width = "0%";
+  seg2.style.width = "0%";
+  seg3.style.width = "0%";
+
+  // Slide 1 → anima seg1
   if (index === 0) {
     seg1.style.transitionDuration = autoPlayInterval + "ms";
-    seg1.classList.add('active');
+    requestAnimationFrame(() => seg1.style.width = "100%");
   }
 
-  // Slide 2 → primo pieno, secondo in animazione
+  // Slide 2 → seg1 pieno, anima seg2
   if (index === 1) {
-    seg1.classList.add('active');
     seg1.style.transitionDuration = "0ms";
+    seg1.style.width = "100%";
 
     seg2.style.transitionDuration = autoPlayInterval + "ms";
-    seg2.classList.add('active');
+    requestAnimationFrame(() => seg2.style.width = "100%");
   }
 
-  // Slide 3 → primi due pieni, terzo ANIMATO (10s)
+  // Slide 3 → seg1 e seg2 pieni, anima seg3
   if (index === 2) {
-    seg1.classList.add('active');
     seg1.style.transitionDuration = "0ms";
+    seg1.style.width = "100%";
 
-    seg2.classList.add('active');
     seg2.style.transitionDuration = "0ms";
+    seg2.style.width = "100%";
 
     seg3.style.transitionDuration = autoPlayInterval + "ms";
-    seg3.classList.add('active');
+    requestAnimationFrame(() => seg3.style.width = "100%");
   }
 }
 
 /* -------------------------
-   CLICK HANDLERS
+   CLICK
 -------------------------- */
 
 slides.forEach((slide, index) => {
