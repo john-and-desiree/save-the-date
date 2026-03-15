@@ -346,7 +346,7 @@ body {
 .progress-bar .segment {
   flex: 1;
   height: 100%;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.18);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -354,7 +354,22 @@ body {
 .progress-bar .fill {
   height: 100%;
   width: 0%;
-  background: white;
+  background: rgba(255,255,255,0.85);
   transition: width linear;
-  /* box-shadow: 0 0 4px rgba(255,255,255,0.9); */ /* attivare se barra è troppo chiara e non è visibile */
+  box-shadow: 0 0 6px rgba(255,255,255,0.6); /* attivare se barra è troppo chiara e non è visibile */
+}
+
+@media (max-width: 600px) {
+  .progress-bar {
+    height: 0.8px;   /* più sottile su mobile */
+    top: 6px;      /* opzionale: avvicina al bordo */
+    gap: 2px;      /* segmenti più vicini */
+  }
+
+  .progress-bar .segment {
+    background: rgba(255,255,255,0.18);
+  }
+  .progress-bar .fill {
+    background: rgba(255,255,255,0.75);
+  }
 }
