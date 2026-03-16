@@ -413,3 +413,35 @@ img {
   -webkit-focus-ring-color: transparent;
   outline: none !important;
 }
+
+
+/* INTRO SLIDE */
+.intro-slide {
+  z-index: 10;
+}
+
+.intro-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("images/foto1.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) brightness(0.7);
+  transform: scale(1.15);
+  z-index: 0;
+}
+
+.intro-bg.white {
+  background: white;
+  filter: none;
+  transform: none;
+}
+
+.intro-text {
+  margin-top: 40vh;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: white;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.55);
+  opacity: 0;
+  animation: fadeInText 2s ease forwards;
+}

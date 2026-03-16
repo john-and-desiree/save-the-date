@@ -1,3 +1,4 @@
+const introSlide = document.querySelector('.intro-slide');
 const slides = document.querySelectorAll('.slide');
 const lastSlide = document.querySelector('.last-slide');
 
@@ -77,7 +78,17 @@ function updateProgressBar(index) {
 }
 
 /* -------------------------
-   CLICK
+   INTRO SLIDE
+-------------------------- */
+
+introSlide.addEventListener('click', () => {
+  introSlide.classList.remove('active');
+  showSlide(0);      // attiva la vera slide 1
+  startAutoPlay();   // avvia timer
+});
+
+/* -------------------------
+   CLICK SLIDES
 -------------------------- */
 
 slides.forEach((slide, index) => {
@@ -99,10 +110,3 @@ lastSlide.addEventListener('click', () => {
   resetAutoPlay();
 
 });
-
-/* -------------------------
-   START
--------------------------- */
-
-showSlide(0);
-startAutoPlay();
