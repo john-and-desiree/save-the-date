@@ -88,5 +88,29 @@
   <!-- JS -->
   <script src="script.js"></script>
 
+
+  <!-- SoundCloud Hidden Player -->
+  <iframe 
+    id="sc-widget"
+    width="0" 
+    height="0" 
+    style="display:none;"
+    scrolling="no" 
+    frameborder="no" 
+    allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/alexandra-violin/perfect-violin-cover&auto_play=false">
+  </iframe>
+
+  <!-- SoundCloud API + Autoplay on First Click -->
+  <script src="https://w.soundcloud.com/player/api.js"></script>
+  <script>
+    document.addEventListener("click", function () {
+      const iframe = document.getElementById("sc-widget");
+      const widget = SC.Widget(iframe);
+      widget.play();
+    }, { once: true });
+  </script>
+
+
 </body>
 </html>
