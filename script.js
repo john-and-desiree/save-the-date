@@ -82,9 +82,9 @@ function updateProgressBar(index) {
 -------------------------- */
 
 introSlide.addEventListener('click', () => {
-  introSlide.classList.remove('active');
-  showSlide(0);      // attiva la vera slide 1
-  startAutoPlay();   // avvia timer
+  introSlide.classList.add('hidden'); // fade-out
+  showSlide(0);                       // attiva la vera slide 1
+  startAutoPlay();                    // avvia timer
 });
 
 /* -------------------------
@@ -105,6 +105,12 @@ slides.forEach((slide, index) => {
 });
 
 lastSlide.addEventListener('click', () => {
+
+  // reset progress bar
+  segments.forEach(seg => {
+    seg.style.transition = "none";
+    seg.style.width = "0%";
+  });
 
   showSlide(0);
   resetAutoPlay();
