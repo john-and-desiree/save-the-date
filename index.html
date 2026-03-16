@@ -30,6 +30,8 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 
 <body>
@@ -101,9 +103,9 @@
     id="sc-widget"
     width="1"
     height="1"
-    style="opacity:0; position:absolute;"
-    scrolling="no" 
-    frameborder="no" 
+    style="position:absolute; opacity:0;"
+    scrolling="no"
+    frameborder="no"
     allow="autoplay"
     src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/alexandra-violin/perfect-violin-cover&auto_play=false">
   </iframe>
@@ -114,8 +116,15 @@
     const iframe = document.getElementById("sc-widget");
     const widget = SC.Widget(iframe);
 
+    let audioStarted = false;
+
     introSlide.addEventListener("click", () => {
-      widget.play();
+
+      if (!audioStarted) {
+        widget.play();
+        audioStarted = true;
+      }
+
     });
   </script>
 
