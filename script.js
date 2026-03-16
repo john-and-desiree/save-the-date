@@ -15,6 +15,9 @@ let currentSlide = 0;
 let autoPlayInterval = 8000; // 8 secondi
 let timer;
 
+// evita che l’audio riparta
+let audioStarted = false;
+
 /* -------------------------
    SLIDES
 -------------------------- */
@@ -81,10 +84,33 @@ function updateProgressBar(index) {
 }
 
 /* -------------------------
-   INTRO SLIDE
+   INTRO SLIDE + AUDIO
 -------------------------- */
 
-introSlide.addEventListener('click', () => {
+introSlide.addEventListener("click", () => {
+
+  // AUDIO — parte solo una volta
+  if (!audioStarted) {
+    audioStarted = true;
+
+    music.muted = false;
+    music.volume = 0;
+
+    music.play().catch(err => console.log("Audio blocked:", err));
+
+    // fade-in romantico
+    let vol = 0;
+    const fade = setInterval(() => {
+      vol += 0.05;
+      if (vol >= 1) {
+        vol = 1;
+        clearInterval(fade);
+      }
+      music.volume = vol;
+    }, 200);
+  }
+
+  // SLIDES
   introSlide.classList.add('hidden'); // fade-out
   showSlide(0);                       // attiva la vera slide 1
   startAutoPlay();                    // avvia timer
@@ -117,25 +143,5 @@ lastSlide.addEventListener('click', () => {
 
   showSlide(0);
   resetAutoPlay();
-
-});
-
-
-// audio mp3 - parte quando si clicca sulla intro slide:
-introSlide.addEventListener("click", () => {
-
-  music.volume = 0;
-  music.play();
-
-  // fade-in romantico
-  let vol = 0;
-  const fade = setInterval(() => {
-    vol += 0.05;
-    if (vol >= 1) {
-      vol = 1;
-      clearInterval(fade);
-    }
-    music.volume = vol;
-  }, 200);
 
 });
