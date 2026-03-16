@@ -455,3 +455,8 @@ img {
   opacity: 0;
   animation: fadeInText 2s ease forwards;
 }
+
+.intro-text,
+.slide h1 {
+  font-family: 'Parisienne', serif;
+}
