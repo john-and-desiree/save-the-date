@@ -8,8 +8,13 @@
 }
 
 /* BODY */
+html, body {
+  font-family: 'Parisienne', cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
-  font-family: 'Georgia', serif;
   position: relative;
   /*overflow: hidden;*/
 }
@@ -77,12 +82,12 @@ body {
 }
 
 /* FONT ROMANTICO SOLO SLIDE 1 & 2 */
-.slide:nth-of-type(1) h1,
+/*.slide:nth-of-type(1) h1,
 .slide:nth-of-type(2) h1 {
   font-family: 'Parisienne', serif;
   font-style: italic;
   font-weight: 400;
-}
+}*/
 
 /* TESTO */
 .overlay h1 {
@@ -459,6 +464,8 @@ img {
 /* Tutti gli h1 in Parisienne */
 h1 {
   font-family: 'Parisienne', cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Per sicurezza, anche la intro */
