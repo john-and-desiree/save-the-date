@@ -83,10 +83,30 @@
       </div>
     </section>
 
+
+    <!-- Miniplayer YouTube sovrapposto -->
+    <div class="yt-miniplayer" id="yt-miniplayer">
+      <div class="yt-player-container">
+        <iframe
+          id="yt-player"
+          width="320"
+          height="180"
+          src="https://www.youtube.com/embed/YOUTUBE_VIDEO_ID?enablejsapi=1&rel=0&controls=1&autoplay=0"
+          title="YouTube video player"
+          frameborder="0"
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+
   </div>
 
   <!-- JS -->
   <script src="script.js"></script>
 
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="script.miniplayer.js"></script>
 </body>
 </html>
