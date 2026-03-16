@@ -8,6 +8,11 @@ let ytStarted = false;
 
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player('yt-player', {
+    videoId: YT_VIDEO_ID, // <--- MANCAVA QUESTO!
+    playerVars: {
+      'autoplay': 0,
+      'controls': 1
+    },
     events: {
       'onReady': onPlayerReady
     }
