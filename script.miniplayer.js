@@ -1,7 +1,7 @@
 // Miniplayer YouTube: avvio automatico al primo click, gestione eventi
 
 // Sostituisci con il tuo video preferito!
-const YT_VIDEO_ID = "YnWgPFgCJ4o&list=RDYnWgPFgCJ4o&start_radio=1"; // Cambia con l'ID del video YouTube
+const YT_VIDEO_ID = "YnWgPFgCJ4o"; // Cambia con l'ID del video YouTube
 
 let ytPlayer;
 let ytStarted = false;
