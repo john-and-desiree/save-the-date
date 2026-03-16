@@ -456,7 +456,12 @@ img {
   animation: fadeInText 2s ease forwards;
 }
 
-.intro-text,
-.slide h1 {
-  font-family: 'Parisienne', serif;
+/* Tutti gli h1 in Parisienne */
+h1 {
+  font-family: 'Parisienne', cursive;
+}
+
+/* Per sicurezza, anche la intro */
+.intro-text {
+  font-family: 'Parisienne', cursive;
 }
