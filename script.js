@@ -8,6 +8,9 @@ const seg3 = document.getElementById('seg3');
 
 const segments = [seg1, seg2, seg3];
 
+// audio mp3:
+const music = document.getElementById("bg-music");
+
 let currentSlide = 0;
 let autoPlayInterval = 8000; // 8 secondi
 let timer;
@@ -114,5 +117,25 @@ lastSlide.addEventListener('click', () => {
 
   showSlide(0);
   resetAutoPlay();
+
+});
+
+
+// audio mp3 - parte quando si clicca sulla intro slide:
+introSlide.addEventListener("click", () => {
+
+  music.volume = 0;
+  music.play();
+
+  // fade-in romantico
+  let vol = 0;
+  const fade = setInterval(() => {
+    vol += 0.05;
+    if (vol >= 1) {
+      vol = 1;
+      clearInterval(fade);
+    }
+    music.volume = vol;
+  }, 200);
 
 });
