@@ -19,6 +19,7 @@ let timer;
 
 // evita che l’audio riparta
 let audioStarted = false;
+let audioEnabled = true;
 
 /* -------------------------
    SLIDES
@@ -88,7 +89,7 @@ function updateProgressBar(index) {
 function updateAudioIcon() {
   if (!audioIcon) return;
 
-  if (music.muted || music.volume === 0) {
+  if (!audioEnabled) {
     audioIcon.textContent = "🔇";
   } else {
     audioIcon.textContent = "🔊";
@@ -99,11 +100,11 @@ function toggleAudio(e) {
   e.stopPropagation();
   e.preventDefault();
 
-  if (music.muted || music.volume === 0) {
-    music.muted = false;
-    if (music.volume === 0) music.volume = 1;
-  } else {
-    music.muted = true;
+  audioEnabled = !audioEnabled;
+  music.muted = !audioEnabled;
+
+  if (audioEnabled && music.volume === 0) {
+    music.volume = 1;
   }
 
   updateAudioIcon();
@@ -125,25 +126,27 @@ introSlide.addEventListener("click", () => {
   if (!audioStarted) {
     audioStarted = true;
 
-    music.muted = false;
-    music.volume = 0;
+    music.muted = !audioEnabled;
+    music.volume = audioEnabled ? 0 : 0;
 
     music.play().catch(err => console.log("Audio blocked:", err));
 
     // Aggiorna icona subito dopo l'avvio dell'audio
     updateAudioIcon();
 
-    // fade-in romantico
-    let vol = 0;
-    const fade = setInterval(() => {
-      vol += 0.05;
-      if (vol >= 1) {
-        vol = 1;
-        clearInterval(fade);
-      }
-      music.volume = vol;
-      updateAudioIcon();
-    }, 200);
+    if (audioEnabled) {
+      // fade-in romantico
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol += 0.05;
+        if (vol >= 1) {
+          vol = 1;
+          clearInterval(fade);
+        }
+        music.volume = vol;
+        updateAudioIcon();
+      }, 200);
+    }
   }
 
   // SLIDES
