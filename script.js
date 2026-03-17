@@ -20,12 +20,7 @@ let timer;
 // evita che l’audio riparta
 let audioStarted = false;
 let audioEnabled = true;
-// Long press per pausa/ripresa
-let longPressTimer = null;
-let wasLongPress = false;
-const longPressDuration = 500; // 500ms per attivare il long press
-let pausedBarWidth = null;
-let slideStartTime = null;
+
 /* -------------------------
    SLIDES
 -------------------------- */
@@ -54,7 +49,6 @@ function nextSlide() {
 function startAutoPlay() {
 
   clearInterval(timer);
-  slideStartTime = Date.now();
 
   if (currentSlide < slides.length - 1) {
     timer = setInterval(nextSlide, autoPlayInterval);
@@ -63,53 +57,6 @@ function startAutoPlay() {
 
 function resetAutoPlay() {
   startAutoPlay();
-}
-
-function startLongPress() {
-  wasLongPress = false;
-  longPressTimer = setTimeout(() => {
-    wasLongPress = true;
-    // Pausa il timer auto-advance
-    clearInterval(timer);
-    
-    // Congela l'animazione della progress bar
-    if (segments[currentSlide]) {
-      const currentFill = segments[currentSlide];
-      // Salva la larghezza attuale
-      pausedBarWidth = window.getComputedStyle(currentFill).width;
-      // Rimuovi la transizione
-      currentFill.style.transition = 'none';
-      // Imposta la larghezza al valore attuale
-      currentFill.style.width = pausedBarWidth;
-    }
-  }, longPressDuration);
-}
-
-function endLongPress() {
-  clearTimeout(longPressTimer);
-
-  if (wasLongPress) {
-    // Calcola il tempo rimasto
-    const elapsedTime = Date.now() - slideStartTime;
-    const remainingTime = Math.max(0, autoPlayInterval - elapsedTime);
-
-    // Riprendi l'animazione della progress bar
-    if (segments[currentSlide]) {
-      const currentFill = segments[currentSlide];
-      currentFill.style.transition = `width ${remainingTime}ms linear`;
-      currentFill.style.width = '100%';
-    }
-
-    // Riprendi il timer se non siamo all'ultima slide
-    if (currentSlide < slides.length - 1) {
-      clearInterval(timer);
-      timer = setTimeout(() => {
-        nextSlide();
-      }, remainingTime);
-    }
-  }
-
-  // NON resettare il flag qui, viene resettato nel click handler
 }
 
 /* -------------------------
@@ -217,19 +164,7 @@ introSlide.addEventListener("click", () => {
 
 slides.forEach((slide, index) => {
 
-  slide.addEventListener('mousedown', startLongPress);
-  slide.addEventListener('touchstart', startLongPress);
-
-  slide.addEventListener('mouseup', endLongPress);
-  slide.addEventListener('mouseleave', endLongPress);
-  slide.addEventListener('touchend', endLongPress);
-
   slide.addEventListener('click', () => {
-
-    if (wasLongPress) {
-      wasLongPress = false;
-      return;
-    }
 
     if (index < slides.length - 1) {
       showSlide(index + 1);
@@ -240,19 +175,7 @@ slides.forEach((slide, index) => {
 
 });
 
-lastSlide.addEventListener('mousedown', startLongPress);
-lastSlide.addEventListener('touchstart', startLongPress);
-
-lastSlide.addEventListener('mouseup', endLongPress);
-lastSlide.addEventListener('mouseleave', endLongPress);
-lastSlide.addEventListener('touchend', endLongPress);
-
 lastSlide.addEventListener('click', () => {
-
-  if (wasLongPress) {
-    wasLongPress = false;
-    return;
-  }
 
   // reset progress bar
   segments.forEach(seg => {
