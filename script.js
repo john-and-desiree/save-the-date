@@ -10,6 +10,8 @@ const segments = [seg1, seg2, seg3];
 
 // audio mp3:
 const music = document.getElementById("bg-music");
+const audioToggle = document.getElementById("audio-toggle");
+const audioIcon = document.getElementById("audio-icon");
 
 let currentSlide = 0;
 let autoPlayInterval = 8000; // 8 secondi
@@ -82,6 +84,36 @@ function updateProgressBar(index) {
     segments[index].style.width = "100%";
   }
 }
+
+function updateAudioIcon() {
+  if (!audioIcon) return;
+
+  if (music.muted || music.volume === 0) {
+    audioIcon.textContent = "🔇";
+  } else {
+    audioIcon.textContent = "🔊";
+  }
+}
+
+function toggleAudio(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
+  if (music.muted || music.volume === 0) {
+    music.muted = false;
+    if (music.volume === 0) music.volume = 1;
+  } else {
+    music.muted = true;
+  }
+
+  updateAudioIcon();
+}
+
+if (audioToggle) {
+  audioToggle.addEventListener('click', toggleAudio);
+}
+
+updateAudioIcon();
 
 /* -------------------------
    INTRO SLIDE + AUDIO
