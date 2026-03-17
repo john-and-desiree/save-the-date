@@ -130,6 +130,9 @@ introSlide.addEventListener("click", () => {
 
     music.play().catch(err => console.log("Audio blocked:", err));
 
+    // Aggiorna icona subito dopo l'avvio dell'audio
+    updateAudioIcon();
+
     // fade-in romantico
     let vol = 0;
     const fade = setInterval(() => {
@@ -139,6 +142,7 @@ introSlide.addEventListener("click", () => {
         clearInterval(fade);
       }
       music.volume = vol;
+      updateAudioIcon();
     }, 200);
   }
 
