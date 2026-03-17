@@ -90,9 +90,12 @@ function updateAudioIcon() {
   if (!audioIcon) return;
 
   if (!audioEnabled) {
-    audioIcon.textContent = "🔇";
+    audioIcon.classList.remove('bi-volume-up');
+    audioIcon.classList.add('bi-volume-mute');
+    audioIcon.classList.remove('bi-volume-down');
   } else {
-    audioIcon.textContent = "🔊";
+    audioIcon.classList.remove('bi-volume-mute');
+    audioIcon.classList.add('bi-volume-up');
   }
 }
 
