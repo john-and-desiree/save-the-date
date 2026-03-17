@@ -20,7 +20,10 @@ let timer;
 // evita che l’audio riparta
 let audioStarted = false;
 let audioEnabled = true;
-
+// Long press per pausa/ripresa
+let longPressTimer = null;
+let wasLongPress = false;
+const longPressDuration = 500; // 500ms per attivare il long press
 /* -------------------------
    SLIDES
 -------------------------- */
@@ -57,6 +60,36 @@ function startAutoPlay() {
 
 function resetAutoPlay() {
   startAutoPlay();
+}
+
+function startLongPress() {
+  wasLongPress = false;
+  longPressTimer = setTimeout(() => {
+    wasLongPress = true;
+    // Pausa il timer auto-advance
+    clearInterval(timer);
+    // Pausa l'animazione della progress bar
+    segments.forEach(seg => {
+      const fill = seg.querySelector('.fill');
+      if (fill) fill.style.animationPlayState = 'paused';
+    });
+  }, longPressDuration);
+}
+
+function endLongPress() {
+  clearTimeout(longPressTimer);
+
+  if (wasLongPress) {
+    // Riprendi l'animazione della progress bar
+    segments.forEach(seg => {
+      const fill = seg.querySelector('.fill');
+      if (fill) fill.style.animationPlayState = 'running';
+    });
+    // Riprendi il timer se non siamo all'ultima slide
+    if (currentSlide < slides.length - 1) {
+      startAutoPlay();
+    }
+  }
 }
 
 /* -------------------------
@@ -164,7 +197,19 @@ introSlide.addEventListener("click", () => {
 
 slides.forEach((slide, index) => {
 
+  slide.addEventListener('mousedown', startLongPress);
+  slide.addEventListener('touchstart', startLongPress);
+
+  slide.addEventListener('mouseup', endLongPress);
+  slide.addEventListener('mouseleave', endLongPress);
+  slide.addEventListener('touchend', endLongPress);
+
   slide.addEventListener('click', () => {
+
+    if (wasLongPress) {
+      wasLongPress = false;
+      return;
+    }
 
     if (index < slides.length - 1) {
       showSlide(index + 1);
@@ -175,7 +220,19 @@ slides.forEach((slide, index) => {
 
 });
 
+lastSlide.addEventListener('mousedown', startLongPress);
+lastSlide.addEventListener('touchstart', startLongPress);
+
+lastSlide.addEventListener('mouseup', endLongPress);
+lastSlide.addEventListener('mouseleave', endLongPress);
+lastSlide.addEventListener('touchend', endLongPress);
+
 lastSlide.addEventListener('click', () => {
+
+  if (wasLongPress) {
+    wasLongPress = false;
+    return;
+  }
 
   // reset progress bar
   segments.forEach(seg => {
