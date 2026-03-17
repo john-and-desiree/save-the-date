@@ -226,6 +226,15 @@ body {
   }
 }
 
+@keyframes fadeInBg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 
 /* MOBILE FRIENDLY */
 @media (max-width: 600px) {
@@ -478,6 +487,8 @@ img {
   filter: blur(22px) brightness(0.7);
   transform: scale(1.15);
   z-index: 0;
+  opacity: 0;
+  animation: fadeInBg 2.5s ease forwards;
 }
 
 .intro-bg.white {
