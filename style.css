@@ -310,6 +310,7 @@ body {
 /* SFONDO SFUOCATO SOLO PER SLIDE 1 E 2 */
 .slide:nth-of-type(2)::before,
 .slide:nth-of-type(3)::before {
+  background-color: #1a1a1a;  /* aggiungi questa riga */
   content: "";
   position: absolute;
   inset: 0;
@@ -470,6 +471,7 @@ img {
 .intro-bg {
   position: absolute;
   inset: 0;
+  background-color: #1a1a1a;  /* placeholder scuro mentre carica */
   background-image: url("images/foto1.jpg");
   background-size: cover;
   background-position: center;
