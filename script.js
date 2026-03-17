@@ -25,6 +25,7 @@ let longPressTimer = null;
 let wasLongPress = false;
 const longPressDuration = 500; // 500ms per attivare il long press
 let pausedBarWidth = null;
+let slideStartTime = null;
 /* -------------------------
    SLIDES
 -------------------------- */
@@ -53,6 +54,7 @@ function nextSlide() {
 function startAutoPlay() {
 
   clearInterval(timer);
+  slideStartTime = Date.now();
 
   if (currentSlide < slides.length - 1) {
     timer = setInterval(nextSlide, autoPlayInterval);
@@ -87,19 +89,29 @@ function endLongPress() {
   clearTimeout(longPressTimer);
 
   if (wasLongPress) {
+    // Calcola il tempo rimasto
+    const elapsedTime = Date.now() - slideStartTime;
+    const remainingTime = Math.max(0, autoPlayInterval - elapsedTime);
+
     // Riprendi l'animazione della progress bar
     if (segments[currentSlide]) {
       const currentFill = segments[currentSlide];
-      // Rimetti la transizione
-      currentFill.style.transition = `width ${autoPlayInterval}ms linear`;
+      // Rimetti la transizione con il tempo rimanente
+      currentFill.style.transition = `width ${remainingTime}ms linear`;
       // Riprendi l'animazione
       currentFill.style.width = '100%';
     }
     // Riprendi il timer se non siamo all'ultima slide
     if (currentSlide < slides.length - 1) {
-      startAutoPlay();
+      timer = setTimeout(() => {
+        nextSlide();
+        startAutoPlay();
+      }, remainingTime);
     }
   }
+
+  // Resetta il flag in tutti i casi (anche su ultima slide)
+  wasLongPress = false;
 }
 
 /* -------------------------
