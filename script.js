@@ -24,6 +24,7 @@ let audioEnabled = true;
 let longPressTimer = null;
 let wasLongPress = false;
 const longPressDuration = 500; // 500ms per attivare il long press
+let pausedBarWidth = null;
 /* -------------------------
    SLIDES
 -------------------------- */
@@ -68,11 +69,17 @@ function startLongPress() {
     wasLongPress = true;
     // Pausa il timer auto-advance
     clearInterval(timer);
-    // Pausa l'animazione della progress bar
-    segments.forEach(seg => {
-      const fill = seg.querySelector('.fill');
-      if (fill) fill.style.animationPlayState = 'paused';
-    });
+    
+    // Congela l'animazione della progress bar
+    if (segments[currentSlide]) {
+      const currentFill = segments[currentSlide];
+      // Salva la larghezza attuale
+      pausedBarWidth = window.getComputedStyle(currentFill).width;
+      // Rimuovi la transizione
+      currentFill.style.transition = 'none';
+      // Imposta la larghezza al valore attuale
+      currentFill.style.width = pausedBarWidth;
+    }
   }, longPressDuration);
 }
 
@@ -81,10 +88,13 @@ function endLongPress() {
 
   if (wasLongPress) {
     // Riprendi l'animazione della progress bar
-    segments.forEach(seg => {
-      const fill = seg.querySelector('.fill');
-      if (fill) fill.style.animationPlayState = 'running';
-    });
+    if (segments[currentSlide]) {
+      const currentFill = segments[currentSlide];
+      // Rimetti la transizione
+      currentFill.style.transition = `width ${autoPlayInterval}ms linear`;
+      // Riprendi l'animazione
+      currentFill.style.width = '100%';
+    }
     // Riprendi il timer se non siamo all'ultima slide
     if (currentSlide < slides.length - 1) {
       startAutoPlay();
