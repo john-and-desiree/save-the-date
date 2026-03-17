@@ -96,22 +96,20 @@ function endLongPress() {
     // Riprendi l'animazione della progress bar
     if (segments[currentSlide]) {
       const currentFill = segments[currentSlide];
-      // Rimetti la transizione con il tempo rimanente
       currentFill.style.transition = `width ${remainingTime}ms linear`;
-      // Riprendi l'animazione
       currentFill.style.width = '100%';
     }
+
     // Riprendi il timer se non siamo all'ultima slide
     if (currentSlide < slides.length - 1) {
+      clearInterval(timer);
       timer = setTimeout(() => {
         nextSlide();
-        startAutoPlay();
       }, remainingTime);
     }
   }
 
-  // Resetta il flag in tutti i casi (anche su ultima slide)
-  wasLongPress = false;
+  // NON resettare il flag qui, viene resettato nel click handler
 }
 
 /* -------------------------
