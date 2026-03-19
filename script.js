@@ -173,7 +173,7 @@ function restartFirstSlide() {
 }
 
 /* -------------------------
-   GESTIONE TAP SINISTRA/DESTRA
+   GESTIONE TAP SINISTRA/DESTRA CON WRAP
 -------------------------- */
 
 const slider = document.querySelector('.slider');
@@ -196,6 +196,9 @@ function onSliderPointer(e) {
     if (currentSlide < slides.length - 1) {
       showSlide(currentSlide + 1);
       resetAutoPlay();
+    } else {
+      // se premi il bottone next sull'ultima slide, wrap alla prima
+      restartFirstSlide();
     }
     return;
   }
@@ -211,9 +214,14 @@ function onSliderPointer(e) {
       return;
     }
   } else {
+    // Zona destra: se non siamo all'ultima slide avanziamo,
+    // altrimenti facciamo il wrap alla prima slide (comportamento richiesto)
     if (currentSlide < slides.length - 1) {
       showSlide(currentSlide + 1);
       resetAutoPlay();
+    } else {
+      // siamo sull'ultima slide: wrap avanti alla prima
+      restartFirstSlide();
     }
   }
 }
