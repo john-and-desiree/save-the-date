@@ -152,6 +152,7 @@ function restartFirstSlide() {
 
 /* -------------------------
    GESTIONE POINTER + SCROLL / LONG PRESS IGNORE
+   (touch-action: pan-y — permettiamo scroll verticale)
 -------------------------- */
 
 const slider = document.querySelector('.slider');
@@ -203,15 +204,8 @@ function onPointerMove(e) {
   const dx = Math.abs(coords.x - activePointer.startX);
   const dy = Math.abs(coords.y - activePointer.startY);
 
-  // se si muove verticalmente oltre la soglia consideriamo scroll e annulliamo il tap
-  if (dy > MOVE_THRESHOLD_PX) {
-    activePointer.moved = true;
-  }
-
-  // se si muove orizzontalmente oltre la soglia potremmo voler ignorare (evita swipe accidentali)
-  if (dx > MOVE_THRESHOLD_PX) {
-    activePointer.moved = true;
-  }
+  if (dy > MOVE_THRESHOLD_PX) activePointer.moved = true;
+  if (dx > MOVE_THRESHOLD_PX) activePointer.moved = true;
 }
 
 function onPointerUp(e) {
@@ -227,18 +221,12 @@ function onPointerUp(e) {
     }
   } catch (err) {}
 
-  const startX = activePointer.startX;
-  const startY = activePointer.startY;
   const moved = activePointer.moved;
   activePointer = null;
 
-  // se è stato uno scroll/drag o movimento significativo, ignoriamo (non è un tap)
-  if (moved) return;
+  if (moved) return;                 // era uno scroll/drag: non è tap
+  if (duration >= LONG_PRESS_MS) return; // long press: ignora
 
-  // se è long press, ignoriamo
-  if (duration >= LONG_PRESS_MS) return;
-
-  // debounce per evitare doppi trigger
   if (now - lastPointerTime < POINTER_DEBOUNCE_MS) {
     if (lastPointerX !== null && Math.abs(lastPointerX - coords.x) < 6) {
       return;
