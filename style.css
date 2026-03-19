@@ -16,7 +16,6 @@ html, body {
 
 body {
   position: relative;
-  /*overflow: hidden;*/
 }
 
 /* SLIDER CONTAINER */
@@ -26,9 +25,9 @@ body {
   position: relative;
   overflow: hidden;
 
-  /* evita che il browser generi gesti nativi che confondono i pointer events */
-  touch-action: pan-y; /*none*/
-  -ms-touch-action: none;
+  /* permetti lo scroll verticale della pagina ma blocca gesti orizzontali */
+  touch-action: pan-y;
+  -ms-touch-action: pan-y;
 }
 
 /* SINGOLA SLIDE */
@@ -48,10 +47,10 @@ body {
   left: 50%;
   width: 100%;
   height: 100vh;
-  object-fit: cover;       /* riempie l'altezza senza bande bianche */
-  object-position: center; /* centra il ritaglio */
+  object-fit: cover;
+  object-position: center;
   transform: translate(-50%, -50%);
-  pointer-events: none;    /* lascia cliccabili i controlli sovrapposti */
+  pointer-events: none;
   z-index: 1;
 }
 
@@ -71,13 +70,10 @@ body {
   align-items: center;
   text-align: center;
   color: white;
-
   padding-top: 6vh;
   padding-left: 20px;
   padding-right: 20px;
-
-  z-index: 2; /* ⬅️ QUESTA È LA CHIAVE */
-
+  z-index: 2;
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.35),
@@ -86,88 +82,39 @@ body {
   );
 }
 
-/* FONT ROMANTICO SOLO SLIDE 1 & 2 */
-/*.slide:nth-of-type(1) h1,
-.slide:nth-of-type(2) h1 {
-  font-family: 'Parisienne', serif;
-  font-style: italic;
-  font-weight: 400;
-}*/
-
 /* TESTO */
 .overlay h1 {
-  /*font-family: 'Playfair Display', serif;
-  font-style: italic;*/
-
   font-size: clamp(2.2rem, 5vw, 3.8rem);
   line-height: 1.25;
-
   color: white;
-
   opacity: 0;
   animation: fadeInText 2.4s ease forwards;
-
-  /* MAGIA PER SFONDI CHIARI */
   text-shadow:
     0 2px 6px rgba(0, 0, 0, 0.55),
     0 0 12px rgba(0, 0, 0, 0.35);
 }
 
-/* Sposta leggermente verso il basso solo il titolo della terza slide e rimuove lo shadow */
-.slide:nth-of-type(4) .overlay h1 {
-  margin-top: 15vh;          /* regola questo valore per alzare/abbassare */
-  text-shadow: none;        /* rimuove l'ombra solo per questa h1 */
-}
-
-/* Mobile: riduci lo spostamento */
-@media (max-width: 600px) {
-  .slide:nth-of-type(4) .overlay h1 {
-    margin-top: 4vh;
-  }
-}
-
-/* CLIC SOLO SULLA PARTE DESTRA DELL’AEREO */
+/* AEREO e SAVE DATE */
 .plane {
   margin-top: 14px;
-
-  width: min(360px, 90vw); /* ⬅️ più grandi */
-  max-width: 420px;        /* limite elegante */
-
+  width: min(360px, 90vw);
+  max-width: 420px;
   cursor: pointer;
-
-  /*clip-path: inset(0 0 0 50%);*/
-
   opacity: 0;
-  
-  z-index: 3; /* ⬅️ sopra overlay e immagine */
-
+  z-index: 3;
   transition: transform 0.3s ease;
 }
 
-.plane:hover {
-  transform: translateX(6px);
-}
-
-.plane:active {
-  transform: translateX(12px) scale(1.03);
-}
-
-/* Fade-in AEREO quando slide diventa attiva */
 .slide.active .plane {
-  /*animation: fadeInSoft 1.8s ease forwards;
-  animation-delay: 1.4s;*/
-
   animation: romanticFadeUp 2s ease forwards;
   animation-delay: 1.6s;
 }
 
-/* PNG SAVE THE DATE */
 .save-date {
-  margin-top: -2vh; /* regola questo valore per alzare/abbassare */
+  margin-top: -2vh;
   width: min(320px, 85vw);
-
   opacity: 0;
-  z-index: 3; /* ⬅️ */
+  z-index: 3;
   animation: fadeInSoft 2.2s ease forwards;
   animation-delay: 1s;
 }
@@ -177,178 +124,10 @@ body {
   animation-delay: 1.2s;
 }
 
-/* TERZA SLIDE CLICCABILE */
-.last-slide {
-  cursor: pointer;
-}
-
-
 /* ANIMAZIONI */
-@keyframes fadeInText {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* FADE-IN MORBIDO PNG */
-@keyframes fadeInSoft {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-@keyframes romanticFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes luxuryFade {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes fadeInBg {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-
-/* MOBILE FRIENDLY */
-@media (max-width: 600px) {
-  .overlay h1 {
-    font-size: 2rem;
-  }
-
-  .plane {
-    width: 90vw;
-  }
-  
-}
-
-
-/* DESKTOP LAYOUT */
-@media (min-width: 900px) {
-
-  .slide {
-    background: radial-gradient(circle, #111 0%, #000 100%);
-  }
-
-  /* SLIDE 1 e 2 → foto verticali con bande nere */
-  .slide:nth-of-type(2) .bg,
-  .slide:nth-of-type(3) .bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 100vh;
-    width: auto;
-    object-fit: contain;   /* mostra tutta la foto */
-    transform: translate(-50%, -50%);
-  }
-
-  /* SLIDE 3 → foto a tutto schermo (come ora) */
-  .slide:nth-of-type(4) .bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 100vh;
-    width: 100vw;
-    object-fit: cover;     /* riempie tutto lo schermo */
-    transform: translate(-50%, -50%);
-  }
-
-  /* Testi desktop */
-  .overlay h1 {
-    font-size: clamp(3rem, 3vw, 4.5rem);
-  }
-
-  /* PNG desktop (come ora) */
-  .save-date {
-    width: 420px;
-  }
-
-  .plane {
-    width: 420px;
-  }
-
-  /* luxury fade */
-  .slider {
-    animation: luxuryFade 1.2s ease;
-  }
-}
-
-/* DESKTOP PICCOLI (es. laptop 13–14 pollici) */
-@media (min-width: 900px) and (max-width: 1300px) {
-
-  /* Riduci PNG per evitare che escano dalla foto */
-  .plane,
-  .save-date {
-    width: min(300px, 70vw);
-    max-width: 300px;
-    height: auto;
-  }
-
-  /* Aggiusta anche il margine del save-the-date se serve */
-  .save-date {
-    margin-top: 1vh;
-  }
-}
-
-/* SFONDO SFUOCATO SOLO PER SLIDE 1 E 2 */
-.slide:nth-of-type(2)::before,
-.slide:nth-of-type(3)::before {
-  background-color: #1a1a1a;  /* aggiungi questa riga */
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(22px) brightness(0.7);
-  transform: scale(1.15);
-  z-index: 0;
-}
-
-/* Immagini specifiche per ogni slide */
-.slide:nth-of-type(2)::before {
-  background-image: url("images/foto1.jpg");
-}
-
-.slide:nth-of-type(3)::before {
-  background-image: url("images/foto2.jpg");
-}
-
-/* La foto originale deve stare sopra lo sfondo sfocato */
-/*.slide .bg {
-  position: relative;
-  z-index: 1;
-}*/
-
+@keyframes fadeInText { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInSoft { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes romanticFadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Progress bar stile Instagram Stories */
 .progress-bar {
@@ -376,7 +155,7 @@ body {
   width: 0%;
   background: rgba(255,255,255,0.85);
   transition: width linear;
-  box-shadow: 0 0 6px rgba(255,255,255,0.6); /* attivare se barra è troppo chiara e non è visibile */
+  box-shadow: 0 0 6px rgba(255,255,255,0.6);
 }
 
 /* Audio toggle bottone */
@@ -398,11 +177,6 @@ body {
   pointer-events: auto;
 }
 
-.audio-toggle:hover {
-  transform: scale(1.08);
-  background: rgba(255, 255, 255, 0.16);
-}
-
 .audio-icon {
   font-size: 1.3rem;
   line-height: 1;
@@ -410,61 +184,9 @@ body {
   text-shadow: 0 0 7px rgba(0,0,0,0.5);
 }
 
-/* Rimuove il flash blu su mobile */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.plane,
-.last-slide,
-.slide {
-  -webkit-tap-highlight-color: transparent;
-}
-
-@media (max-width: 600px) {
-  .progress-bar {
-    height: 1.5px;   /* più sottile su mobile */
-    top: 6px;      /* opzionale: avvicina al bordo */
-    gap: 2px;      /* segmenti più vicini */
-  }
-
-  .progress-bar .segment {
-    background: rgba(255,255,255,0.18);
-  }
-  .progress-bar .fill {
-    background: rgba(255,255,255,0.75);
-  }
-}
-
-
-/* Rimuove TUTTI gli highlight blu su Android e iOS */
-* {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-
-/* Rimuove il bordo blu di focus */
-*:focus,
-*:focus-visible {
-  outline: none !important;
-}
-
-/* Immagini cliccabili: rimuove overlay blu e selezione */
-img {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-
-/* Elementi cliccabili (plane, slide, last-slide) */
-.plane,
-.last-slide,
-.slide {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-focus-ring-color: transparent;
-  outline: none !important;
-}
-
+/* Rimuove highlight e selezione */
+* { -webkit-tap-highlight-color: transparent; }
+img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 
 /* INTRO SLIDE */
 .intro-slide {
@@ -484,7 +206,7 @@ img {
 .intro-bg {
   position: absolute;
   inset: 0;
-  background-color: #1a1a1a;  /* placeholder scuro mentre carica */
+  background-color: #1a1a1a;
   background-image: url("images/foto1.jpg");
   background-size: cover;
   background-position: center;
@@ -493,12 +215,6 @@ img {
   z-index: 0;
   opacity: 0;
   animation: fadeInBg 2.5s ease forwards;
-}
-
-.intro-bg.white {
-  background: white;
-  filter: none;
-  transform: none;
 }
 
 .intro-text {
@@ -510,14 +226,9 @@ img {
   animation: fadeInText 2s ease forwards;
 }
 
-/* Tutti gli h1 in Parisienne */
-h1 {
-  font-family: 'Parisienne', cursive;
-  font-weight: 400;
-  font-style: normal;
-}
-
-/* Per sicurezza, anche la intro */
-.intro-text {
-  font-family: 'Parisienne', cursive;
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .overlay h1 { font-size: 2rem; }
+  .plane { width: 90vw; }
+  .progress-bar { height: 1.5px; top: 6px; gap: 2px; }
 }
