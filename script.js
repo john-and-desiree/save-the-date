@@ -1,3 +1,6 @@
+/* script.js aggiornato: supporto "press & hold to pause" + gestione tap/scroll/longpress */
+
+/* ELEMENTI DOM */
 const introSlide = document.querySelector('.intro-slide');
 const slides = document.querySelectorAll('.slide');
 
@@ -15,11 +18,28 @@ let currentSlide = 0;
 let autoPlayInterval = 8000; // 8 secondi
 let timer;
 
+/* AUDIO */
 let audioStarted = false;
 let audioEnabled = true;
 
+/* STATO PER HOLD/PAUSE */
+let activePointer = null;
+let lastPointerTime = 0;
+let lastPointerX = null;
+const POINTER_DEBOUNCE_MS = 300;
+const LONG_PRESS_MS = 500;      // soglia per considerare long-press (non cambia slide)
+const MOVE_THRESHOLD_PX = 10;   // se si muove più di 10px consideriamo scroll/drag
+const HOLD_THRESHOLD_MS = 200;  // dopo quanti ms di pressione iniziare la pausa (tweakable)
+
+let holdTimer = null;
+let isHolding = false;          // true quando siamo in pausa da press&hold
+
+// per gestire progresso/pausa della barra
+let progressStartTime = 0;      // timestamp quando è partita l'animazione corrente
+let remainingForCurrent = null; // ms rimanenti quando mettiamo in pausa
+
 /* -------------------------
-   SLIDES / PROGRESS
+   FUNZIONI SLIDE / PROGRESS
 -------------------------- */
 
 function showSlide(index) {
@@ -49,23 +69,88 @@ function resetAutoPlay() {
   startAutoPlay();
 }
 
+/* -------------------------
+   PROGRESS BAR (start/pausa/resume)
+-------------------------- */
+
 function updateProgressBar(index) {
+  // reset totale
   segments.forEach(seg => {
     seg.style.transition = "none";
     seg.style.width = "0%";
   });
+
+  // forzare reflow
   void document.body.offsetWidth;
+
+  // riempi le barre precedenti
   for (let i = 0; i < index; i++) {
     segments[i].style.width = "100%";
   }
+
+  // anima la barra corrente
   if (segments[index]) {
+    // imposta transizione e avvia
     segments[index].style.transition = `width ${autoPlayInterval}ms linear`;
+    // forza reflow prima di settare width per sicurezza
+    void segments[index].offsetWidth;
     segments[index].style.width = "100%";
+    // registra inizio animazione
+    progressStartTime = Date.now();
+    remainingForCurrent = autoPlayInterval;
   }
 }
 
+// mette in pausa l'animazione della barra corrente (usato da press&hold)
+function pauseProgressBarForHold() {
+  if (!segments[currentSlide]) return;
+  // calcola elapsed
+  const elapsed = Date.now() - progressStartTime;
+  const elapsedClamped = Math.min(elapsed, autoPlayInterval);
+  const percent = (elapsedClamped / autoPlayInterval) * 100;
+
+  // rimuovi transizione e fissa la larghezza corrente
+  segments[currentSlide].style.transition = "none";
+  segments[currentSlide].style.width = `${percent}%`;
+
+  // calcola remaining
+  remainingForCurrent = Math.max(autoPlayInterval - elapsedClamped, 0);
+
+  // ferma timer globale
+  clearInterval(timer);
+  isHolding = true;
+}
+
+// riprende l'animazione della barra dalla posizione salvata
+function resumeProgressBarAfterHold() {
+  if (!segments[currentSlide]) return;
+  // se remainingForCurrent è null, riavvia normalmente
+  const rem = remainingForCurrent != null ? remainingForCurrent : autoPlayInterval;
+
+  // forza reflow
+  void segments[currentSlide].offsetWidth;
+
+  // imposta transizione per remaining ms e porta a 100%
+  segments[currentSlide].style.transition = `width ${rem}ms linear`;
+  segments[currentSlide].style.width = "100%";
+
+  // imposta progressStartTime come "ora - (autoPlayInterval - rem)" per calcoli futuri
+  progressStartTime = Date.now() - (autoPlayInterval - rem);
+
+  // dopo rem ms, avanza e riavvia autoplay regolare
+  clearInterval(timer);
+  timer = setTimeout(() => {
+    nextSlide();
+    startAutoPlay();
+  }, rem);
+
+  // reset stato
+  remainingForCurrent = null;
+  isHolding = false;
+}
+
 /* -------------------------
-   AUDIO
+   AUDIO ICON / TOGGLE
 -------------------------- */
 
 function updateAudioIcon() {
@@ -115,6 +200,7 @@ introSlide.addEventListener("click", () => {
       }, 200);
     }
   }
+
   introSlide.classList.add('hidden');
   showSlide(0);
   startAutoPlay();
@@ -129,6 +215,7 @@ function restartSlide1Animations() {
   if (!first) return;
   const plane = first.querySelector('.plane');
   const save = first.querySelector('.save-date');
+
   [plane, save].forEach(el => {
     if (!el) return;
     el.style.animation = 'none';
@@ -151,20 +238,10 @@ function restartFirstSlide() {
 }
 
 /* -------------------------
-   GESTIONE POINTER + SCROLL / LONG PRESS IGNORE
-   (touch-action: pan-y — permettiamo scroll verticale)
+   GESTIONE POINTER / TAP / HOLD / SCROLL
 -------------------------- */
 
 const slider = document.querySelector('.slider');
-
-let lastPointerTime = 0;
-let lastPointerX = null;
-const POINTER_DEBOUNCE_MS = 300;
-
-const LONG_PRESS_MS = 500;      // soglia long press (ms)
-const MOVE_THRESHOLD_PX = 10;   // se si muove più di 10px consideriamo scroll/drag
-
-let activePointer = null;
 
 function getClientCoordsFromEvent(e) {
   if (window.PointerEvent && e instanceof PointerEvent) {
@@ -192,9 +269,20 @@ function onPointerDown(e) {
     moved: false
   };
 
+  // set pointer capture se disponibile
   if (window.PointerEvent && e instanceof PointerEvent && slider.setPointerCapture) {
     try { slider.setPointerCapture(activePointer.id); } catch (err) {}
   }
+
+  // avvia timer per riconoscere hold -> pausa (non immediato per evitare pause su tap breve)
+  clearTimeout(holdTimer);
+  holdTimer = setTimeout(() => {
+    // se non si è mossi, attiva la pausa
+    if (activePointer && !activePointer.moved) {
+      // metti in pausa la progress bar e il timer
+      pauseProgressBarForHold();
+    }
+  }, HOLD_THRESHOLD_MS);
 }
 
 function onPointerMove(e) {
@@ -204,17 +292,22 @@ function onPointerMove(e) {
   const dx = Math.abs(coords.x - activePointer.startX);
   const dy = Math.abs(coords.y - activePointer.startY);
 
-  if (dy > MOVE_THRESHOLD_PX) activePointer.moved = true;
-  if (dx > MOVE_THRESHOLD_PX) activePointer.moved = true;
+  if (dy > MOVE_THRESHOLD_PX || dx > MOVE_THRESHOLD_PX) {
+    activePointer.moved = true;
+    // se ci stiamo muovendo, annulla il timer di hold (non vogliamo pause durante scroll/drag)
+    clearTimeout(holdTimer);
+  }
 }
 
 function onPointerUp(e) {
+  // se non c'era pointer attivo, nulla da fare
   if (!activePointer) return;
 
   const coords = getClientCoordsFromEvent(e);
   const now = Date.now();
   const duration = now - activePointer.startTime;
 
+  // release pointer capture
   try {
     if (window.PointerEvent && e instanceof PointerEvent && activePointer.id != null) {
       slider.releasePointerCapture && slider.releasePointerCapture(activePointer.id);
@@ -224,9 +317,22 @@ function onPointerUp(e) {
   const moved = activePointer.moved;
   activePointer = null;
 
-  if (moved) return;                 // era uno scroll/drag: non è tap
-  if (duration >= LONG_PRESS_MS) return; // long press: ignora
+  // cancella hold timer
+  clearTimeout(holdTimer);
 
+  // se siamo in stato holding (pausa attiva), al rilascio riprendi la progressione
+  if (isHolding) {
+    resumeProgressBarAfterHold();
+    return;
+  }
+
+  // se è stato uno scroll/drag o movimento significativo, ignoriamo (non è un tap)
+  if (moved) return;
+
+  // se è long press (durata >= LONG_PRESS_MS) e non abbiamo attivato hold, non considerarlo tap
+  if (duration >= LONG_PRESS_MS) return;
+
+  // debounce per evitare doppi trigger
   if (now - lastPointerTime < POINTER_DEBOUNCE_MS) {
     if (lastPointerX !== null && Math.abs(lastPointerX - coords.x) < 6) {
       return;
@@ -239,6 +345,7 @@ function onPointerUp(e) {
   const half = window.innerWidth / 2;
   const isLeft = coords.x < half;
 
+  // Se il target è il bottone next esplicito, trattalo come tap destro
   const clickedNextBtn = e.target && e.target.closest && e.target.closest('.next-btn');
   if (clickedNextBtn) {
     if (currentSlide < slides.length - 1) {
@@ -250,6 +357,7 @@ function onPointerUp(e) {
     return;
   }
 
+  // comportamento tap breve: sinistra = indietro/riavvia, destra = avanti (wrap ultima->prima)
   if (isLeft) {
     if (currentSlide === 0) {
       restartFirstSlide();
@@ -271,6 +379,7 @@ function onPointerUp(e) {
 }
 
 function onPointerCancelOrLeave(e) {
+  // pulisce lo stato se il pointer viene cancellato o esce
   if (!activePointer) return;
   try {
     if (window.PointerEvent && e instanceof PointerEvent && activePointer.id != null) {
@@ -278,8 +387,14 @@ function onPointerCancelOrLeave(e) {
     }
   } catch (err) {}
   activePointer = null;
+  clearTimeout(holdTimer);
+  // se eravamo in hold, rilascia la pausa
+  if (isHolding) {
+    resumeProgressBarAfterHold();
+  }
 }
 
+/* registra listener pointer + fallback touch */
 if (slider) {
   try { slider.removeEventListener('touchstart', onPointerDown); } catch (err) {}
   slider.addEventListener('pointerdown', onPointerDown);
@@ -298,17 +413,6 @@ if (slider) {
   slider.addEventListener('contextmenu', e => e.preventDefault());
 }
 
-// Blocca la selezione testuale dentro lo slider (compatibile mouse/touch)
-if (typeof slider !== 'undefined' && slider) {
-  slider.addEventListener('selectstart', function(e) {
-    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.classList.contains('allow-select'))) {
-      return;
-    }
-    e.preventDefault();
-  }, { passive: false });
-
-  slider.addEventListener('mousedown', function(e) {
-    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.classList.contains('allow-select'))) return;
-    e.preventDefault();
-  });
-}
+/* -------------------------
+   FINE
+-------------------------- */
