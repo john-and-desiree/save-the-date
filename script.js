@@ -1,6 +1,5 @@
 const introSlide = document.querySelector('.intro-slide');
 const slides = document.querySelectorAll('.slide');
-const lastSlide = document.querySelector('.last-slide');
 
 const seg1 = document.getElementById('seg1');
 const seg2 = document.getElementById('seg2');
@@ -26,30 +25,23 @@ let audioEnabled = true;
 -------------------------- */
 
 function showSlide(index) {
-
   currentSlide = index;
-
   slides.forEach(slide => slide.classList.remove('active'));
   slides[index].classList.add('active');
-
   updateProgressBar(index);
 }
 
 function nextSlide() {
-
   if (currentSlide < slides.length - 1) {
     showSlide(currentSlide + 1);
   }
-
   if (currentSlide === slides.length - 1) {
     clearInterval(timer);
   }
 }
 
 function startAutoPlay() {
-
   clearInterval(timer);
-
   if (currentSlide < slides.length - 1) {
     timer = setInterval(nextSlide, autoPlayInterval);
   }
@@ -86,9 +78,12 @@ function updateProgressBar(index) {
   }
 }
 
+/* -------------------------
+   AUDIO
+-------------------------- */
+
 function updateAudioIcon() {
   if (!audioIcon) return;
-
   if (!audioEnabled) {
     audioIcon.classList.remove('bi-volume-up');
     audioIcon.classList.add('bi-volume-mute');
@@ -102,21 +97,13 @@ function updateAudioIcon() {
 function toggleAudio(e) {
   e.stopPropagation();
   e.preventDefault();
-
   audioEnabled = !audioEnabled;
   music.muted = !audioEnabled;
-
-  if (audioEnabled && music.volume === 0) {
-    music.volume = 1;
-  }
-
+  if (audioEnabled && music.volume === 0) music.volume = 1;
   updateAudioIcon();
 }
 
-if (audioToggle) {
-  audioToggle.addEventListener('click', toggleAudio);
-}
-
+if (audioToggle) audioToggle.addEventListener('click', toggleAudio);
 updateAudioIcon();
 
 /* -------------------------
@@ -128,15 +115,12 @@ introSlide.addEventListener("click", () => {
   // AUDIO — parte solo una volta
   if (!audioStarted) {
     audioStarted = true;
-
     music.muted = !audioEnabled;
     music.volume = audioEnabled ? 0 : 0;
-
     music.play().catch(err => console.log("Audio blocked:", err));
 
     // Aggiorna icona subito dopo l'avvio dell'audio
     updateAudioIcon();
-
     if (audioEnabled) {
       // fade-in romantico
       let vol = 0;
@@ -152,38 +136,93 @@ introSlide.addEventListener("click", () => {
     }
   }
 
-  // SLIDES
-  introSlide.classList.add('hidden'); // fade-out
-  showSlide(0);                       // attiva la vera slide 1
-  startAutoPlay();                    // avvia timer
+  introSlide.classList.add('hidden');
+  showSlide(0);
+  startAutoPlay();
 });
 
 /* -------------------------
-   CLICK SLIDES
+   RIAVVIO ANIMAZIONI SLIDE 1
 -------------------------- */
 
-slides.forEach((slide, index) => {
+function restartSlide1Animations() {
+  const first = slides[0];
+  if (!first) return;
+  const plane = first.querySelector('.plane');
+  const save = first.querySelector('.save-date');
 
-  slide.addEventListener('click', () => {
+  [plane, save].forEach(el => {
+    if (!el) return;
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+  });
+}
 
-    if (index < slides.length - 1) {
-      showSlide(index + 1);
+function restartFirstSlide() {
+  if (segments[0]) {
+    segments[0].style.transition = "none";
+    segments[0].style.width = "0%";
+    void document.body.offsetWidth;
+    segments[0].style.transition = `width ${autoPlayInterval}ms linear`;
+    segments[0].style.width = "100%";
+  }
+  showSlide(0);
+  restartSlide1Animations();
+  resetAutoPlay();
+}
+
+/* -------------------------
+   GESTIONE TAP SINISTRA/DESTRA
+-------------------------- */
+
+const slider = document.querySelector('.slider');
+
+function onSliderPointer(e) {
+  if (!introSlide.classList.contains('hidden')) return;
+
+  let clientX;
+  if (e.type.startsWith('touch')) {
+    clientX = e.touches && e.touches[0] ? e.touches[0].clientX : (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : 0);
+  } else {
+    clientX = e.clientX !== undefined ? e.clientX : (e.pageX || 0);
+  }
+
+  const half = window.innerWidth / 2;
+  const isLeft = clientX < half;
+
+  const clickedNextBtn = e.target && e.target.closest && e.target.closest('.next-btn');
+  if (clickedNextBtn) {
+    if (currentSlide < slides.length - 1) {
+      showSlide(currentSlide + 1);
       resetAutoPlay();
     }
+    return;
+  }
 
-  });
+  if (isLeft) {
+    if (currentSlide === 0) {
+      restartFirstSlide();
+      return;
+    }
+    if (currentSlide > 0) {
+      showSlide(currentSlide - 1);
+      resetAutoPlay();
+      return;
+    }
+  } else {
+    if (currentSlide < slides.length - 1) {
+      showSlide(currentSlide + 1);
+      resetAutoPlay();
+    }
+  }
+}
 
-});
+if (slider) {
+  slider.addEventListener('pointerdown', onSliderPointer);
+  slider.addEventListener('touchstart', onSliderPointer, {passive: true});
+}
 
-lastSlide.addEventListener('click', () => {
-
-  // reset progress bar
-  segments.forEach(seg => {
-    seg.style.transition = "none";
-    seg.style.width = "0%";
-  });
-
-  showSlide(0);
-  resetAutoPlay();
-
-});
+/* -------------------------
+   FINE
+-------------------------- */
