@@ -25,6 +25,10 @@ body {
   height: 100vh;
   position: relative;
   overflow: hidden;
+
+  /* evita che il browser generi gesti nativi che confondono i pointer events */
+  touch-action: pan-y; /*none*/
+  -ms-touch-action: none;
 }
 
 /* SINGOLA SLIDE */
