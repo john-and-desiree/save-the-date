@@ -297,3 +297,18 @@ if (slider) {
   // previeni menu contestuale su long press
   slider.addEventListener('contextmenu', e => e.preventDefault());
 }
+
+// Blocca la selezione testuale dentro lo slider (compatibile mouse/touch)
+if (typeof slider !== 'undefined' && slider) {
+  slider.addEventListener('selectstart', function(e) {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.classList.contains('allow-select'))) {
+      return;
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  slider.addEventListener('mousedown', function(e) {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.classList.contains('allow-select'))) return;
+    e.preventDefault();
+  });
+}
