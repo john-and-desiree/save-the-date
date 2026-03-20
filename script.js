@@ -42,6 +42,10 @@ let remainingForCurrent = null; // ms rimanenti quando mettiamo in pausa
    FUNZIONI SLIDE / PROGRESS
 -------------------------- */
 
+function getSlideInterval(index) {
+  return index === 2 ? 15000 : autoPlayInterval;
+}
+
 function showSlide(index) {
   currentSlide = index;
   slides.forEach(slide => slide.classList.remove('active'));
@@ -61,7 +65,8 @@ function nextSlide() {
 function startAutoPlay() {
   clearInterval(timer);
   if (currentSlide < slides.length - 1) {
-    timer = setInterval(nextSlide, autoPlayInterval);
+    const duration = getSlideInterval(currentSlide);
+    timer = setInterval(nextSlide, duration);
   }
 }
 
@@ -74,6 +79,7 @@ function resetAutoPlay() {
 -------------------------- */
 
 function updateProgressBar(index) {
+  const duration = getSlideInterval(index);
   // reset totale
   segments.forEach(seg => {
     seg.style.transition = "none";
@@ -91,30 +97,31 @@ function updateProgressBar(index) {
   // anima la barra corrente
   if (segments[index]) {
     // imposta transizione e avvia
-    segments[index].style.transition = `width ${autoPlayInterval}ms linear`;
+    segments[index].style.transition = `width ${duration}ms linear`;
     // forza reflow prima di settare width per sicurezza
     void segments[index].offsetWidth;
     segments[index].style.width = "100%";
     // registra inizio animazione
     progressStartTime = Date.now();
-    remainingForCurrent = autoPlayInterval;
+    remainingForCurrent = duration;
   }
 }
 
 // mette in pausa l'animazione della barra corrente (usato da press&hold)
 function pauseProgressBarForHold() {
   if (!segments[currentSlide]) return;
+  const duration = getSlideInterval(currentSlide);
   // calcola elapsed
   const elapsed = Date.now() - progressStartTime;
-  const elapsedClamped = Math.min(elapsed, autoPlayInterval);
-  const percent = (elapsedClamped / autoPlayInterval) * 100;
+  const elapsedClamped = Math.min(elapsed, duration);
+  const percent = (elapsedClamped / duration) * 100;
 
   // rimuovi transizione e fissa la larghezza corrente
   segments[currentSlide].style.transition = "none";
   segments[currentSlide].style.width = `${percent}%`;
 
   // calcola remaining
-  remainingForCurrent = Math.max(autoPlayInterval - elapsedClamped, 0);
+  remainingForCurrent = Math.max(duration - elapsedClamped, 0);
 
   // ferma timer globale
   clearInterval(timer);
@@ -124,8 +131,9 @@ function pauseProgressBarForHold() {
 // riprende l'animazione della barra dalla posizione salvata
 function resumeProgressBarAfterHold() {
   if (!segments[currentSlide]) return;
+  const duration = getSlideInterval(currentSlide);
   // se remainingForCurrent è null, riavvia normalmente
-  const rem = remainingForCurrent != null ? remainingForCurrent : autoPlayInterval;
+  const rem = remainingForCurrent != null ? remainingForCurrent : duration;
 
   // forza reflow
   void segments[currentSlide].offsetWidth;
@@ -134,8 +142,8 @@ function resumeProgressBarAfterHold() {
   segments[currentSlide].style.transition = `width ${rem}ms linear`;
   segments[currentSlide].style.width = "100%";
 
-  // imposta progressStartTime come "ora - (autoPlayInterval - rem)" per calcoli futuri
-  progressStartTime = Date.now() - (autoPlayInterval - rem);
+  // imposta progressStartTime come "ora - (duration - rem)" per calcoli futuri
+  progressStartTime = Date.now() - (duration - rem);
 
   // dopo rem ms, avanza e riavvia autoplay regolare
   clearInterval(timer);
@@ -225,11 +233,12 @@ function restartSlide1Animations() {
 }
 
 function restartFirstSlide() {
+  const duration = getSlideInterval(0);
   if (segments[0]) {
     segments[0].style.transition = "none";
     segments[0].style.width = "0%";
     void document.body.offsetWidth;
-    segments[0].style.transition = `width ${autoPlayInterval}ms linear`;
+    segments[0].style.transition = `width ${duration}ms linear`;
     segments[0].style.width = "100%";
   }
   showSlide(0);
