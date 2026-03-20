@@ -39,11 +39,48 @@ let progressStartTime = 0;      // timestamp quando è partita l'animazione corr
 let remainingForCurrent = null; // ms rimanenti quando mettiamo in pausa
 
 /* -------------------------
+   GESTIONE PLANE RESPONSIVE (piccoli desktop landscape)
+-------------------------- */
+
+function updatePlaneImage() {
+  // Media query: desktop piccolo (13-14") in landscape
+  const isSmallDesktopLandscape = window.matchMedia(
+    '(min-width: 900px) and (max-width: 1300px) and (orientation: landscape)'
+  ).matches;
+
+  // Seleziona il plane nella slide 0 (slides[0])
+  const firstSlide = slides[0];
+  if (!firstSlide) return;
+
+  const planeImg = firstSlide.querySelector('.plane');
+  if (!planeImg) return;
+
+  if (isSmallDesktopLandscape) {
+    // Cambia in plane1_modified.png
+    if (!planeImg.src.includes('plane1_modified.png')) {
+      planeImg.src = 'images/plane1_modified.png';
+    }
+  } else {
+    // Torna a plane1.png
+    if (planeImg.src.includes('plane1_modified.png')) {
+      planeImg.src = 'images/plane1.png';
+    }
+  }
+}
+
+// Chiama al caricamento della pagina
+document.addEventListener('DOMContentLoaded', updatePlaneImage);
+
+// Aggiorna anche al resize e al cambio di orientamento
+window.addEventListener('resize', updatePlaneImage);
+window.addEventListener('orientationchange', updatePlaneImage);
+
+/* -------------------------
    FUNZIONI SLIDE / PROGRESS
 -------------------------- */
 
 function getSlideInterval(index) {
-  return index === 2 ? 15000 : autoPlayInterval;
+  return index === 2 ? 15000 : autoPlayInterval; // modifica secondi ultima slide
 }
 
 function showSlide(index) {
