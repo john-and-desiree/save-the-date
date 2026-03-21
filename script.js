@@ -48,14 +48,6 @@ function updatePlaneImage() {
     '(min-width: 900px) and (max-width: 1300px) and (orientation: landscape)'
   ).matches;
 
-  // Media query: mobile/tablet in landscape
-  const isMobileLandscape = window.matchMedia(
-    '(orientation: landscape) and (max-width: 899px)'
-  ).matches;
-
-  // Usa plane1_modified.png per entrambi i casi
-  const shouldUseModified = isSmallDesktopLandscape || isMobileLandscape;
-
   // Seleziona il plane nella slide 0 (slides[0])
   const firstSlide = slides[0];
   if (!firstSlide) return;
@@ -67,7 +59,7 @@ function updatePlaneImage() {
   const currentSrc = planeImg.src;
   const dirPath = currentSrc.substring(0, currentSrc.lastIndexOf('/') + 1);
 
-  if (shouldUseModified) {
+  if (isSmallDesktopLandscape) {
     // Cambia in plane1_modified.png
     if (!planeImg.src.includes('plane1_modified.png')) {
       planeImg.src = dirPath + 'plane1_modified.png';
