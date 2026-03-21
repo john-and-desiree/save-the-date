@@ -55,15 +55,19 @@ function updatePlaneImage() {
   const planeImg = firstSlide.querySelector('.plane');
   if (!planeImg) return;
 
+  // Estrai il percorso della directory dalla sorgente corrente
+  const currentSrc = planeImg.src;
+  const dirPath = currentSrc.substring(0, currentSrc.lastIndexOf('/') + 1);
+
   if (isSmallDesktopLandscape) {
     // Cambia in plane1_modified.png
     if (!planeImg.src.includes('plane1_modified.png')) {
-      planeImg.src = 'images/plane1_modified.png';
+      planeImg.src = dirPath + 'plane1_modified.png';
     }
   } else {
     // Torna a plane1.png
     if (planeImg.src.includes('plane1_modified.png')) {
-      planeImg.src = 'images/plane1.png';
+      planeImg.src = dirPath + 'plane1.png';
     }
   }
 }
