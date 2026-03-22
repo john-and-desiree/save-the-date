@@ -109,7 +109,7 @@ body {
 /* AUDIO INFO - sottotitolo intro slide */
 .audio-info {
   position: fixed;
-  bottom: 70px;
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Playfair Display', serif;
