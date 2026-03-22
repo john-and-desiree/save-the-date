@@ -477,7 +477,7 @@ img {
 .intro-audio-hint {
   position: fixed;
   left: 50%;
-  bottom: 30px;                     /* distanza dal fondo (regolabile) */
+  bottom: 32px;                     /* distanza dal fondo (regolabile) */
   transform: translateX(-50%);      /* centra orizzontalmente */
   color: rgba(255,255,255,0.95);
   font-family: 'Playfair Display', serif;
