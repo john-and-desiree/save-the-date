@@ -106,6 +106,21 @@ body {
     0 0 12px rgba(0, 0, 0, 0.35);
 }
 
+/* AUDIO INFO - sottotitolo intro slide */
+.intro-slide .audio-info {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  color: white;
+  opacity: 0;
+  margin-top: auto;
+  margin-bottom: 2vh;
+  animation: fadeInText 2.4s ease forwards;
+  animation-delay: 0.6s;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
 /* Sposta leggermente verso il basso solo il titolo della terza slide e rimuove lo shadow */
 .slide:nth-of-type(4) .overlay h1 {
   margin-top: 15vh;
