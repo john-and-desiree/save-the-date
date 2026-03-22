@@ -502,18 +502,18 @@ img {
 }
 
 /* Mobile: riduci bottom e padding per evitare sovrapposizioni */
-@media (max-width: 420px) {
+/*@media (max-width: 420px) {
   .intro-audio-hint {
     bottom: 64px;
     font-size: 0.95rem;
     padding: 6px 10px;
   }
-}
+}*/
 
 /* Se il bottone audio è molto alto su alcuni dispositivi, aumenta bottom per evitare sovrapposizione */
-@media (min-height: 900px) {
+/*@media (min-height: 900px) {
   .intro-audio-hint { bottom: 88px; }
-}
+}*/
 
 .intro-text {
   margin-top: 40vh;
