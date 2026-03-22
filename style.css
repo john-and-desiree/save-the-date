@@ -473,6 +473,47 @@ img {
   transform: none;
 }
 
+/* Badge fixed, centrato in basso; non interferisce con il bottone audio a destra */
+.intro-audio-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 72px;                     /* distanza dal fondo (regolabile) */
+  transform: translateX(-50%);      /* centra orizzontalmente */
+  color: rgba(255,255,255,0.95);
+  font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+  background: rgba(0,0,0,0.28);
+  padding: 8px 14px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  z-index: 1000001;                  /* sopra la maggior parte degli elementi */
+  pointer-events: none;              /* non intercetta tocchi; bottone audio resta cliccabile */
+  white-space: nowrap;
+  text-align: center;
+  opacity: 0.98;
+}
+
+/* Se vuoi che il badge scompaia quando l'intro è nascosta, usa questa regola */
+.intro-slide.hidden ~ .intro-audio-hint,
+.intro-slide.hidden + .intro-audio-hint {
+  display: none;
+}
+
+/* Mobile: riduci bottom e padding per evitare sovrapposizioni */
+@media (max-width: 420px) {
+  .intro-audio-hint {
+    bottom: 64px;
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
+}
+
+/* Se il bottone audio è molto alto su alcuni dispositivi, aumenta bottom per evitare sovrapposizione */
+@media (min-height: 900px) {
+  .intro-audio-hint { bottom: 88px; }
+}
+
 .intro-text {
   margin-top: 40vh;
   font-size: clamp(1.8rem, 4vw, 3rem);
