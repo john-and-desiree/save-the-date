@@ -109,7 +109,7 @@ body {
 /* AUDIO INFO - sottotitolo intro slide */
 .intro-slide .audio-info {
   font-family: 'Playfair Display', serif;
-  font-style: italic;
+  /*font-style: italic;*/
   font-size: clamp(0.7rem, 2vw, 1rem);
   color: white;
   opacity: 0;
