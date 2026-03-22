@@ -106,30 +106,6 @@ body {
     0 0 12px rgba(0, 0, 0, 0.35);
 }
 
-/* AUDIO INFO - sottotitolo intro slide */
-.audio-info {
-  position: fixed;
-  bottom: 38px;              /* 👈 centro esatto del bottone */
-  left: 50%;
-  transform: translate(-50%, 50%); /* 👈 centra perfettamente */
-
-  font-family: 'Playfair Display', serif;
-  font-style: normal;
-  font-weight: 400;
-
-  font-size: clamp(0.7rem, 2vw, 1rem);
-  color: white;
-
-  opacity: 0;
-  animation: fadeInText 2.4s ease forwards;
-  animation-delay: 0.6s;
-
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-
-  z-index: 1000000;
-  pointer-events: none;
-}
-
 /* Sposta leggermente verso il basso solo il titolo della terza slide e rimuove lo shadow */
 .slide:nth-of-type(4) .overlay h1 {
   margin-top: 15vh;
