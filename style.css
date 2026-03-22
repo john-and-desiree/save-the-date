@@ -109,12 +109,12 @@ body {
 /* AUDIO INFO - sottotitolo intro slide */
 .audio-info {
   position: fixed;
-  bottom: 16px;              /* IDENTICO a .audio-toggle */
+  bottom: 38px;              /* 👈 centro esatto del bottone */
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 50%); /* 👈 centra perfettamente */
 
   font-family: 'Playfair Display', serif;
-  font-style: normal;        /* 🔥 NON italic */
+  font-style: normal;
   font-weight: 400;
 
   font-size: clamp(0.7rem, 2vw, 1rem);
